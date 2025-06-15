@@ -1,1 +1,9 @@
 @import 'tailwindcss';
+@plugin "daisyui" {
+}
+@plugin "daisyui/theme" {
+  name: 'synthwave';
+}
+@plugin "daisyui/theme" {
+  name: 'pastel';
+}
