@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      daisyui:
-        specifier: ^5.0.43
-        version: 5.0.43
       next:
         specifier: 15.3.3
         version: 15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -51,6 +48,9 @@ importers:
       cypress:
         specifier: ^14.4.1
         version: 14.4.1
+      daisyui:
+        specifier: ^5.0.43
+        version: 5.0.43
       eslint:
         specifier: ^9
         version: 9.28.0(jiti@2.4.2)
