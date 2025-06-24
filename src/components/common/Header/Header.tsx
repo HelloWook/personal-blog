@@ -1,13 +1,22 @@
 import React from 'react';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import Link from 'next/link';
 
 const Header = () => {
   return (
     <div className='navbar'>
       <div className='flex-1'>
-        <a className='text-xl btn btn-ghost'>daisyUI</a>
+        <Link className='text-xl btn btn-ghost' href={'/'}>
+          HelloWook.life
+        </Link>
       </div>
       <div className='flex-none'>
+        <Link className='btn btn-ghost' href={'/posts'}>
+          Posts
+        </Link>
+        <Link className='btn btn-ghost' href={'/abouts'}>
+          Abouts
+        </Link>
         <ThemeToggle />
       </div>
     </div>
