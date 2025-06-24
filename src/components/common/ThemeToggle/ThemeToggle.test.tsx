@@ -15,15 +15,15 @@ describe('ThemeToggle', () => {
     const theme = htmlElement.getAttribute('data-theme');
     expect(theme).toBe('pastel');
   });
-});
 
-it('테마를 변경하면 data-theme 속성이 업데이트된다', () => {
-  render(<ThemeToggle />);
+  it('테마를 변경하면 data-theme 속성이 업데이트된다', () => {
+    render(<ThemeToggle />);
 
-  const checkbox = screen.getByRole('checkbox');
-  fireEvent.click(checkbox);
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
 
-  const htmlElement = document.documentElement;
-  const theme = htmlElement.getAttribute('data-theme');
-  expect(theme).toBe('synthwave');
+    const htmlElement = document.documentElement;
+    const theme = htmlElement.getAttribute('data-theme');
+    expect(theme).toBe('synthwave');
+  });
 });
