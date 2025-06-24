@@ -1,4 +1,5 @@
 import './globals.css';
+import Header from '@/components/common/Header/Header';
 
 export default function RootLayout({
   children,
@@ -6,11 +7,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ko' data-theme='synthwave'>
+    <html lang='ko' data-theme='pastel'>
       <head>
         <title>HelloWook 블로그</title>
       </head>
-      <body>{children}</body>
+      <body className='max-w-screen-md m-auto'>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

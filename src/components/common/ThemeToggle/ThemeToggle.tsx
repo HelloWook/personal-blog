@@ -1,19 +1,19 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type Theme = 'synthwave' | 'pastel';
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState<Theme>('synthwave');
+  const [theme, setTheme] = useState<Theme>('pastel');
 
   const handleThemeChange = () => {
-    if (theme === 'synthwave') {
-      setTheme('pastel');
-    }
-    if (theme === 'pastel') {
-      setTheme('synthwave');
-    }
+    const getTheme = (current: Theme) => (current === 'synthwave' ? 'pastel' : 'synthwave');
+    setTheme(getTheme(theme));
   };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   return (
     <label className='swap swap-rotate'>
@@ -22,6 +22,8 @@ const ThemeToggle = () => {
         className='theme-controller'
         value={theme}
         onChange={handleThemeChange}
+        id='theme-toggle-checkbox'
+        checked={theme === 'synthwave'}
       />
       <svg
         className='w-8 h-8 fill-current swap-off'
