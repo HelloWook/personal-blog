@@ -23,6 +23,7 @@ const ThemeToggle = () => {
         value={theme}
         onChange={handleThemeChange}
         id='theme-toggle-checkbox'
+        checked={theme === 'synthwave'}
       />
       <svg
         className='w-8 h-8 fill-current swap-off'
