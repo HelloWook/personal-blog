@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Profile from './Profile';
 
 jest.mock('@/util/getPlaiceholder', () => ({
@@ -8,9 +8,7 @@ jest.mock('@/util/getPlaiceholder', () => ({
 
 describe('Profile', () => {
   it('컴포넌트가 정상적으로 렌더링된다.', async () => {
-    await act(async () => {
-      render(<Profile />);
-    });
+    render(<Profile />);
     const img = await screen.findByAltText('알밤');
     expect(img).toBeInTheDocument();
   });
