@@ -13,8 +13,11 @@
   },
   "dependencies": {
     "next": "15.3.3",
+    "plaiceholder": "^3.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-typed": "^2.0.12",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
