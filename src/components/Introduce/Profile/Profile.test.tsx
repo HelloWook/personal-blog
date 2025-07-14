@@ -8,7 +8,7 @@ jest.mock('@/util/getPlaiceholder', () => ({
 
 describe('Profile', () => {
   it('컴포넌트가 정상적으로 렌더링된다.', async () => {
-    render(<Profile />);
+    render(await Profile());
     const img = await screen.findByAltText('알밤');
     expect(img).toBeInTheDocument();
   });

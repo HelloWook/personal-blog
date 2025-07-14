@@ -1,15 +1,10 @@
 'use server';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
 import Albam from '@/asset/알밤.png';
 import getBlurImg from '@/util/getPlaiceholder';
 
-const Profile = () => {
-  const [blurData, setBlurData] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    getBlurImg('/src/asset/알밤.png').then(setBlurData);
-  }, []);
+const Profile = async () => {
+  const blurData = await getBlurImg('/src/asset/알밤.png');
 
   return (
     <Image
