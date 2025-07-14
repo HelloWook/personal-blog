@@ -1,3 +1,9 @@
+import Introduce from '@/components/Introduce/Introduce';
+
 export default function Home() {
-  return <>개발 중..</>;
+  return (
+    <>
+      <Introduce />
+    </>
+  );
 }
