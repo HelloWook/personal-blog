@@ -30,4 +30,16 @@ describe('Header', () => {
     const aboutsLink = screen.getByText('Abouts');
     expect(aboutsLink).toHaveAttribute('href', '/abouts');
   });
+
+  it('projects 링크가 정상적으로 렌더링된다', () => {
+    render(<Header />);
+    const projectsLink = screen.getByText('projects');
+    expect(projectsLink).toBeInTheDocument();
+  });
+
+  it('projects 링크가 올바른 경로로 연결된다', () => {
+    render(<Header />);
+    const projectsLink = screen.getByText('projects');
+    expect(projectsLink).toHaveAttribute('href', '/projects');
+  });
 });

@@ -1,22 +1,11 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-
-type Theme = 'synthwave' | 'pastel';
+import useTheme from '@/hooks/useTheme';
+import React from 'react';
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState<Theme>('pastel');
-
-  const handleThemeChange = () => {
-    const getTheme = (current: Theme) => (current === 'synthwave' ? 'pastel' : 'synthwave');
-    setTheme(getTheme(theme));
-  };
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
+  const { theme, handleThemeChange } = useTheme();
   return (
-    <label className='swap swap-rotate'>
+    <label className=' swap swap-rotate'>
       <input
         type='checkbox'
         className='theme-controller'
@@ -26,7 +15,7 @@ const ThemeToggle = () => {
         checked={theme === 'synthwave'}
       />
       <svg
-        className='w-8 h-8 fill-current swap-off'
+        className='w-6 h-6 fill-current swap-off'
         xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 24 24'
       >
@@ -34,7 +23,7 @@ const ThemeToggle = () => {
       </svg>
 
       <svg
-        className='w-8 h-8 fill-current swap-on'
+        className='w-6 h-6 fill-current swap-on'
         xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 24 24'
       >

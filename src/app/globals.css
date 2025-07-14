@@ -7,3 +7,26 @@
 @plugin "daisyui/theme" {
   name: 'pastel';
 }
+
+body {
+  @apply text-lg font-normal;
+
+  h1 {
+    @apply text-2xl font-bold;
+  }
+}
+
+@layer components {
+  .underline-animation {
+    @apply relative;
+  }
+
+  .underline-animation::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-0 h-0.5 bg-current transition-all duration-300 ease-out;
+  }
+
+  .underline-animation:hover::after {
+    @apply w-full;
+  }
+}

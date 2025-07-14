@@ -7,10 +7,20 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jsdom',
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
 };
 
-module.exports = createJestConfig(customJestConfig);
+const jestConfig = async () => {
+  const configFn = createJestConfig(customJestConfig);
+  const config = await configFn();
+
+  return {
+    ...config,
+    transformIgnorePatterns: ['/node_modules/?!(query-string)/', '^.+\\.module\\.(css|sass|scss)$'],
+  };
+};
+
+module.exports = jestConfig;

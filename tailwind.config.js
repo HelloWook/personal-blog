@@ -7,5 +7,8 @@ module.exports = {
   daisyui: {
     themes: ['synthwave', 'pastel'],
   },
+  fontFamily: {
+    suite: ['var(--font-suite)'],
+  },
   plugins: [require('daisyui')],
 };
