@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Post } from '@/types/post';
 
-const PostCard = ({ title, excerpt, date, thumbnail, slug }: Post) => {
+const PostCard = ({ title, excerpt, thumbnail, slug }: Post) => {
   return (
     <Link
       href={`/posts/${slug}`}
