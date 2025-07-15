@@ -1,11 +1,15 @@
 import React from 'react';
 import Profile from './Profile/Profile';
 import IntroMessage from './IntroMessage/IntroMessage';
+import SocialLink from './SocialLink/SocialLink';
 
 const Introduce = () => {
   return (
     <div className='flex items-center justify-between'>
-      <IntroMessage />
+      <div className='flex flex-col'>
+        <IntroMessage />
+        <SocialLink />
+      </div>
       <Profile />
     </div>
   );

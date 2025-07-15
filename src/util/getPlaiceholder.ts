@@ -1,4 +1,6 @@
 import { getPlaiceholder } from 'plaiceholder';
+import fs from 'fs';
+import path from 'path';
 
 const getBlurImg = async (imgSrc: string) => {
   try {
@@ -10,4 +12,15 @@ const getBlurImg = async (imgSrc: string) => {
   }
 };
 
-export default getBlurImg;
+const getBlurLocalImg = async (imgPath: string) => {
+  try {
+    const fullPath = path.join(process.cwd(), imgPath);
+    const buffer = fs.readFileSync(fullPath);
+    const { base64 } = await getPlaiceholder(buffer, { size: 5 });
+    return base64;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export { getBlurImg, getBlurLocalImg };

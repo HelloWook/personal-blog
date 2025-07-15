@@ -3,7 +3,7 @@ import Profile from './Profile';
 
 jest.mock('@/util/getPlaiceholder', () => ({
   __esModule: true,
-  default: async () => 'data:image/png;base64,MOCKED',
+  getBlurLocalImg: async () => 'data:image/png;base64,MOCKED',
 }));
 
 describe('Profile', () => {
