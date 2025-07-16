@@ -3,3 +3,5 @@
 
 # 커밋 전 린트 실행
 pnpm lint
+
+pnpm run build
