@@ -69,7 +69,7 @@ describe('파일 유틸 테스팅', () => {
 
   it('getPosts는 지정된 디렉토리에서 MDX 파일만 필터링해야 합니다', () => {
     jest.spyOn(fs, 'readdirSync').mockReturnValue(['post1.mdx', 'post2.ts', 'post3.js']);
-    const mockDirectory = 'mockPosts';
+
     jest.spyOn(fs, 'readFileSync').mockImplementation((filePath) => {
       if (filePath.includes('mdx')) return `---\ntitle: "Post 1"\ndate: "2023-01-01"\ntags: ["tag1"]\n---\nContent of post 1`;
 
