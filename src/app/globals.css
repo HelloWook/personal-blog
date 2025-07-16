@@ -10,6 +10,7 @@
 
 body {
   @apply text-lg font-normal;
+  @apply overflow-y-scroll;
 
   h1 {
     @apply text-2xl font-bold;

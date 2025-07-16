@@ -3,9 +3,9 @@ import PostContainer from '@/components/Post/PostContainer/PostContainer';
 
 export default function Home() {
   return (
-    <>
+    <div>
       <Introduce />
       <PostContainer />
-    </>
+    </div>
   );
 }

@@ -20,7 +20,7 @@ const PostCard = ({ title, excerpt, thumbnail, slug }: Post) => {
         </figure>
         <div className='p-4 card-body'>
           <h2>{title}</h2>
-          <p className='overflow-hidden text-ellipsis'>{excerpt}</p>
+          <p className='line-clamp-2 '>{excerpt}</p>
         </div>
       </div>
     </Link>

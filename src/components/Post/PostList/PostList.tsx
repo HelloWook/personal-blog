@@ -10,7 +10,7 @@ interface PostListProps {
 const PostList = ({ posts }: PostListProps) => {
   return (
     <div className='flex flex-col gap-6'>
-      {posts.slice(0, 3).map((post, idx) => (
+      {posts.slice(0, 4).map((post, idx) => (
         <PostCard
           key={idx}
           title={post.title}
