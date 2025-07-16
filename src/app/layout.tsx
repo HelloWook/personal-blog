@@ -1,5 +1,5 @@
-import suite from './fonts/suite';
-import './globals.css';
+import suite from '@/asset/fonts/suite';
+import '@/style/globals.css';
 import Header from '@/components/Header/Header';
 
 export default function RootLayout({
