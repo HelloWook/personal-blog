@@ -10,13 +10,24 @@
 
 body {
   @apply text-lg font-normal;
+  @apply overflow-y-scroll;
 
   h1 {
     @apply text-2xl font-bold;
   }
 
   h2 {
-    @apply text-xl font-semibold;
+    @apply text-xl  font-semibold;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    @apply text-base-content;
   }
 }
 
@@ -32,5 +43,9 @@ body {
 
   .underline-animation:hover::after {
     @apply w-full;
+  }
+
+  [data-theme='synthwave'] .theme-shadow-color {
+    @apply shadow-base-content;
   }
 }
