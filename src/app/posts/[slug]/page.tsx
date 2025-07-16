@@ -1,6 +1,6 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
-import parseMdx from '@/util/parseMdx';
+import parseMdx from '@/util/parseMDX';
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const { mdxContent } = parseMdx(params.slug);

@@ -1,5 +1,4 @@
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getStaticpath } from '@/util/getPosts';
+import { getStaticpath } from '@/util/file';
 import fs from 'fs';
 import matter from 'gray-matter';
 

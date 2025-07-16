@@ -1,6 +1,6 @@
 import React from 'react';
 import PostList from '../PostList/PostList';
-import { mockPosts } from '@/mocks/Post';
+
 import { Post } from '@/types/post';
 
 interface PostContainerProps {
