@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Profile from './Profile';
 
-jest.mock('@/util/getPlaiceholder', () => ({
+jest.mock('@/util/blurImg', () => ({
   __esModule: true,
   getBlurLocalImg: async () => 'data:image/png;base64,MOCKED',
 }));

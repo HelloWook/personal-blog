@@ -2,11 +2,10 @@ import { getStaticpath } from '@/util/file';
 import fs from 'fs';
 import matter from 'gray-matter';
 
-const parseMdx = (slug: string) => {
-  const content = fs.readFileSync(getStaticpath([`contents/posts/${slug}.mdx`]), 'utf-8');
-  const { content: mdxContent, data } = matter(content);
+const parseMDX = (slug: string) => {
+  const { content: mdxContent, data } = matter(fs.readFileSync(getStaticpath([`contents/posts/${slug}.mdx`]), 'utf-8'));
 
   return { mdxContent, data };
 };
 
-export default parseMdx;
+export default parseMDX;
