@@ -5,6 +5,6 @@
   "useTabs": false,
   "endOfLine": "lf",
   "jsxSingleQuote": true,
-  "printWidth": 100,
+  "printWidth": 140,
   "arrowParens": "always"
 }

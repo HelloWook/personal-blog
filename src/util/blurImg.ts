@@ -9,6 +9,7 @@ const getBlurImg = async (imgSrc: string) => {
     return base64;
   } catch (e) {
     console.log(e);
+    return '';
   }
 };
 
@@ -20,6 +21,7 @@ const getBlurLocalImg = async (imgPath: string) => {
     return base64;
   } catch (e) {
     console.log(e);
+    return '';
   }
 };
 
