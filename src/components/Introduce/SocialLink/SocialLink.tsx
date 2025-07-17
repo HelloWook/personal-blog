@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import React from 'react';
 
 const SocialLink = () => {
@@ -57,7 +58,7 @@ const SocialLink = () => {
   return (
     <div className='flex gap-3 mt-4'>
       {socialLinks.map((link) => (
-        <a
+        <Link
           key={link.name}
           href={link.url}
           target='_blank'
@@ -79,7 +80,7 @@ const SocialLink = () => {
           <span className='transition-transform duration-300 group-hover:scale-110'>
             {link.icon}
           </span>
-        </a>
+        </Link>
       ))}
     </div>
   );
