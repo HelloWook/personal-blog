@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const Header = () => {
   return (
-    <header className='flex items-center py-4'>
+    <header className='flex items-center py-4 mb-8'>
       <Link className='flex-1 text-xl' href={'/'}>
         <h1 className='underline-animation w-fit '>HelloWook.life</h1>
       </Link>
