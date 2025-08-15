@@ -16,7 +16,7 @@ const Header = () => {
           Abouts
         </Link>
         <Link href={'/projects'} className='underline-animation'>
-          projects
+          Projects
         </Link>
         <ThemeToggle />
       </div>
