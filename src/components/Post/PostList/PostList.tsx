@@ -11,15 +11,7 @@ const PostList = ({ posts }: PostListProps) => {
   return (
     <div className='flex flex-col gap-6'>
       {posts.slice(0, 4).map((post, idx) => (
-        <PostCard
-          key={idx}
-          title={post.title}
-          excerpt={post.excerpt}
-          date={post.date}
-          thumbnail={Albam}
-          tags={post.tags}
-          slug={post.slug}
-        />
+        <PostCard fileName={post.fileName} key={idx} title={post.title} excerpt={post.excerpt} thumbnail={Albam} />
       ))}
     </div>
   );
