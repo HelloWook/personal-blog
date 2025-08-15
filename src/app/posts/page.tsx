@@ -23,7 +23,7 @@ const PostPage = async ({ searchParams }: PostPageProps) => {
       <h2 className='mb-2 text-3xl text-center'>{title}</h2>
       <p className='mb-6 text-xl text-center text-gray-300'>{posts.length} Posts</p>
       <PostSeriesList seriesList={seriesList} />
-      <div className='grid grid-cols-2 gap-8'>
+      <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
         {posts.map((post, idx) => {
           const { excerpt, fileName, title } = post;
           return <PostCard key={idx} excerpt={excerpt} fileName={fileName} thumbnail={Albam} title={title} />;
