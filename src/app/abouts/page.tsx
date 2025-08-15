@@ -8,7 +8,7 @@ const About = () => {
   return (
     <div className='w-full'>
       <Introduce />
-      <SubTitle title='나의 지난 날들' />
+      <SubTitle title='나의 지난 날들' description='저의 발자취 입니다.' />
       <TimeLine activities={Activities} />
     </div>
   );
