@@ -7,4 +7,6 @@ export interface Post {
   thumbnail: string | StaticImageData;
   tags?: string[];
   slug: string;
+  fileName: string;
+  series: string;
 }
