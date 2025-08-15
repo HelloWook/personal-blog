@@ -9,9 +9,9 @@ export const Activities: Activity[] = [
   {
     date: '2020-08-04',
     title: '입대',
-    description: '작전병으로 복무하며 한글 및 엑셀을 활용한 행정 업무를 주로 맡았습니다.',
+    description: '작전병으로 복무하며 한글 및 엑셀을 활용한 행정 업무 수행',
   },
-  { date: '2022-02-03', title: '전역', description: '육군 병장으로 만기 전역했습니다.' },
+  { date: '2022-02-03', title: '전역', description: '육군 병장으로 만기 전역' },
   {
     date: '2024-09-01',
     title: 'SQLD 취득',
@@ -20,6 +20,11 @@ export const Activities: Activity[] = [
   {
     date: '2024-12-11',
     title: '프로그래머스 데브코스 프론트엔드(전공 과정) 수료',
+    description: '',
+  },
+  {
+    date: '2024-02-01',
+    title: '동의대학교 컴퓨터 공학과 졸업',
     description: '',
   },
   {
