@@ -14,7 +14,7 @@ export default function RootLayout({
         <title>HelloWook 블로그</title>
       </head>
       <body>
-        <div className='max-w-screen-md min-h-screen m-auto font-suite'>
+        <div className='max-w-[900px] w-[90%] min-h-screen m-auto '>
           <Header />
           {children}
         </div>
