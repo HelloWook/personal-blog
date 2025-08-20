@@ -12,9 +12,7 @@ const getFile = (directory: string) => fs.readdirSync(getStaticpath([directory])
 
 const getSeries = (directory: string) => {
   const posts = extractPostContent(directory);
-  return Array.from(new Set(posts.flatMap((post) => post.series)))
-    .slice()
-    .sort();
+  return Array.from(new Set(posts.map((post) => post.series).filter(Boolean))).sort();
 };
 
 const getFileNames = (directory: string) => {
