@@ -1,9 +1,10 @@
 'use client';
+import { getLocalStorage } from '@/util/getLocalStorage';
 import { useEffect, useState } from 'react';
 type Theme = 'synthwave' | 'pastel';
 
 const useTheme = () => {
-  const initTheme = localStorage.getItem('theme') as Theme | null;
+  const initTheme = getLocalStorage('theme') as Theme | null;
 
   const [theme, setTheme] = useState<Theme>(initTheme || 'pastel');
 
