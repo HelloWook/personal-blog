@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     dirs: ['src'],
   },
   outputFileTracingIncludes: {
-    '/contents': ['./public/**/*'],
+    '/': ['./contents/posts/**/*'],
   },
 };
 
