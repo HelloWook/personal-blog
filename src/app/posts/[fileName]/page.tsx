@@ -1,9 +1,8 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getFileNames } from '@/util/file';
 import rehypePrettyCode, { type Options } from 'rehype-pretty-code';
-
+import { Metadata } from 'next';
 import parseMdx from '@/util/parseMDX';
-import { use } from 'react';
 import Pre from '@/components/Pre/Pre';
 
 interface PostDetailPageProps {
@@ -21,8 +20,23 @@ const prettyCodeOptions: Options = {
   transformers: [],
 };
 
-export default function PostDetailPage({ params }: PostDetailPageProps) {
-  const { fileName } = use(params);
+export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
+  const { fileName } = await params;
+  const { data } = parseMdx(fileName);
+  return {
+    title: data.title,
+    description: data.excerpt,
+    // 차후에 url 설정
+    openGraph: {
+      title: data.title,
+      description: data.excerpt,
+      images: data.thumbnail,
+    },
+  };
+}
+
+export default async function PostDetailPage({ params }: PostDetailPageProps) {
+  const { fileName } = await params;
   const { mdxContent } = parseMdx(fileName);
 
   return (
