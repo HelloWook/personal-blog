@@ -1,5 +1,7 @@
 @import 'tailwindcss';
+
 @plugin "daisyui" {
+  exclude: rootscrollgutter;
 }
 @plugin "daisyui/theme" {
   name: 'synthwave';
@@ -29,6 +31,14 @@ body {
   p {
     @apply text-base-content;
   }
+
+  figure[data-rehype-pretty-code-figure] {
+    @apply my-3 overflow-clip rounded-xl;
+
+    pre {
+      @apply p-5 overflow-x-auto;
+    }
+  }
 }
 
 @layer components {
@@ -47,5 +57,25 @@ body {
 
   [data-theme='synthwave'] .theme-shadow-color {
     @apply shadow-base-content;
+  }
+
+  code[data-theme*=' '],
+  code[data-theme*=' '] span {
+    color: var(--shiki-light);
+    background-color: var(--shiki-light-bg);
+  }
+
+  figure[data-rehype-pretty-code-figure] pre {
+    @apply bg-[var(--shiki-light-bg)];
+  }
+
+  [data-theme='synthwave'] {
+    code span {
+      color: var(--shiki-dark);
+      background-color: var(--shiki-dark-bg);
+    }
+    figure[data-rehype-pretty-code-figure] pre {
+      @apply bg-[var(--shiki-dark-bg)];
+    }
   }
 }
