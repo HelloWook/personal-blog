@@ -24,6 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-typed": "^2.0.12",
+    "rehype-pretty-code": "^0.14.1",
     "sharp": "^0.34.3"
   },
   "devDependencies": {

@@ -1,7 +1,8 @@
 import Footer from '@/components/Footer/Footer';
-import suite from '@/asset/fonts/suite';
+import suite from '../util/suite';
 import '../styles/global.css';
 import Header from '@/components/Header/Header';
+import Drawer from '@/components/Drawer/Drawer';
 
 export default function RootLayout({
   children,
@@ -14,7 +15,8 @@ export default function RootLayout({
         <title>HelloWook 블로그</title>
       </head>
       <body>
-        <div className='max-w-screen-md min-h-screen m-auto font-suite'>
+        <Drawer />
+        <div className='max-w-[900px] w-[90%] min-h-screen m-auto '>
           <Header />
           {children}
         </div>
