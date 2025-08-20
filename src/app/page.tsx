@@ -1,14 +1,27 @@
 import Introduce from '@/components/Introduce/Introduce';
-import PostList from '@/components/Post/PostList/PostList';
-import { getPosts } from '@/util/file';
+import PostCard from '@/components/Post/PostCard/PostCard';
+import { getPostWithBlur } from '@/util/file';
+import SubTitle from '@/components/SubTitle/SubTitle';
 
-export default function Home() {
-  const post = getPosts('contents/posts');
+export default async function Home() {
+  const posts = await getPostWithBlur();
 
   return (
     <>
       <Introduce />
-      <PostList posts={post} />
+      <SubTitle title='최근 포스트' description='개발과 관련된 다양한 주제들을 다룹니다' />
+      <div className='flex flex-col gap-6'>
+        {posts.slice(0, 4).map((post, idx) => (
+          <PostCard
+            key={idx}
+            fileName={post.fileName}
+            title={post.title}
+            excerpt={post.excerpt}
+            thumbnail={post.thumbnail}
+            blurDataURL={post.blurDataURL}
+          />
+        ))}
+      </div>
     </>
   );
 }

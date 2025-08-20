@@ -1,24 +1,22 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
 interface PostSeriesListProps {
   seriesList: string[];
+  onSeriesChange: (series: string) => void;
 }
 
-const PostSeriesList = ({ seriesList }: PostSeriesListProps) => {
-  const pathname = usePathname();
+const PostSeriesList = ({ seriesList, onSeriesChange }: PostSeriesListProps) => {
+  const buttonStyle = `text-2xl cursor-pointer`;
 
   return (
     <div className='flex items-center justify-center gap-6 mb-8'>
-      <Link key={'All'} href={`${pathname}`} className='text-2xl '>
+      <button className={buttonStyle} onClick={() => onSeriesChange('All')}>
         All
-      </Link>
+      </button>
       {seriesList.map((series) => (
-        <Link key={series} href={`${pathname}?series=${series}`} className='text-2xl '>
+        <button key={series} className={buttonStyle} onClick={() => onSeriesChange(series)}>
           {series}
-        </Link>
+        </button>
       ))}
     </div>
   );

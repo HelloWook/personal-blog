@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { Post } from '@/types/post';
-
+import { getBlurLocalImg } from './blurImg';
 // 빌더 패턴으로 리펙토링
 const getPosts = (directory: string) => extractPostContent(directory);
 
@@ -12,7 +12,9 @@ const getFile = (directory: string) => fs.readdirSync(getStaticpath([directory])
 
 const getSeries = (directory: string) => {
   const posts = extractPostContent(directory);
-  return Array.from(new Set(posts.map((post) => post.series).filter(Boolean))).sort();
+  return Array.from(new Set(posts.flatMap((post) => post.series)))
+    .slice()
+    .sort();
 };
 
 const getFileNames = (directory: string) => {
@@ -57,4 +59,15 @@ const extract = (file: string) => {
   };
 };
 
-export { getPosts, getStaticpath, getFile, extractPostContent, getSeries, getFileNames, extract };
+const getPostWithBlur = async () => {
+  const posts = getPosts('/contents/posts');
+
+  return await Promise.all(
+    posts.map(async (p) => ({
+      ...p,
+      blurDataURL: await getBlurLocalImg(p.thumbnail),
+    }))
+  );
+};
+
+export { getPosts, getStaticpath, getFile, extractPostContent, getSeries, getFileNames, extract, getPostWithBlur };
