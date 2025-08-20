@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 type Theme = 'synthwave' | 'pastel';
 
 const useTheme = () => {
-  const initTheme = getLocalStorage('theme') as Theme | null;
-
-  const [theme, setTheme] = useState<Theme>(initTheme || 'pastel');
+  const [theme, setTheme] = useState<Theme>('pastel');
 
   const handleThemeChange = () => {
     const getTheme = (current: Theme) => (current === 'synthwave' ? 'pastel' : 'synthwave');
@@ -16,6 +14,8 @@ const useTheme = () => {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    const initTheme = getLocalStorage('theme') as Theme | null;
+    setTheme(initTheme || 'pastel');
   }, [theme]);
 
   return { theme, handleThemeChange };
