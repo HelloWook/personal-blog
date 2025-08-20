@@ -8,3 +8,7 @@ export interface Post {
   fileName: string;
   series: string;
 }
+
+export interface PostWithBlur extends Post {
+  blurDataURL: string;
+}

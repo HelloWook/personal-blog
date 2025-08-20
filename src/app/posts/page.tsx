@@ -1,30 +1,18 @@
 import PostSeries from '@/components/Post/PostSeries/PostSeries';
-import { getSeries, getPosts } from '@/util/file';
+import { getPostWithBlur, getSeries } from '@/util/file';
+import { Suspense } from 'react';
 
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-
-interface PostPageProps {
-  searchParams: SearchParams;
-}
-
-const PostPage = async ({ searchParams }: PostPageProps) => {
-  const sp = await searchParams;
-
-  const raw = sp.series ? sp.series : undefined;
-  const series = Array.isArray(raw) ? raw[0] : raw ?? 'All';
-
-  console.log(series);
-
+const PostPage = async () => {
+  const postList = await getPostWithBlur();
   const seriesList = getSeries('contents/posts');
-  const postList = getPosts('contents/posts').filter((post) => {
-    if (series === 'All') return true;
-    else return post.series === series;
-  });
 
-  console.log(seriesList);
-  console.log(postList);
-
-  return <div className='w-full'>{<PostSeries series={series} postList={postList} seriesList={seriesList} />}</div>;
+  return (
+    <div className='w-full'>
+      <Suspense fallback={<p>Loading...</p>}>
+        <PostSeries postList={postList} seriesList={seriesList} />
+      </Suspense>
+    </div>
+  );
 };
 
 export default PostPage;
