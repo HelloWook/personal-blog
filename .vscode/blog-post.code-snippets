@@ -1,0 +1,18 @@
+{
+  "Blog Post MDX": {
+    "prefix": "blogpost",
+    "body": [
+      "---",
+      "title: '$1'",
+      "excerpt: '$2'",
+      "date: '${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}'",
+      "thumbnail: '/images/$3.jpg'",
+      "tags:",
+      "  - $4",
+      "slug: $1",
+      "series: $5",
+      "---"
+    ],
+    "description": "새로운 블로그 포스트용 MDX 템플릿"
+  }
+}
