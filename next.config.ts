@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   eslint: {
     dirs: ['src'],
   },
+  outputFileTracingIncludes: {
+    '/': ['./contents/posts/**/*'],
+  },
 };
 
 const withMDX = createMDX({
