@@ -1,9 +1,8 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getFileNames, extract } from '@/util/file';
+import { getFileNames } from '@/util/file';
 import rehypePrettyCode, { type Options } from 'rehype-pretty-code';
 import { Metadata } from 'next';
 import parseMdx from '@/util/parseMDX';
-import { use } from 'react';
 import Pre from '@/components/Pre/Pre';
 
 interface PostDetailPageProps {
@@ -24,7 +23,6 @@ const prettyCodeOptions: Options = {
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
   const { fileName } = await params;
   const { data } = parseMdx(fileName);
-  console.log(data);
   return {
     title: data.title,
     description: data.excerpt,

@@ -3,13 +3,13 @@ import PostSeriesList from '@/components/Post/PostSeriesList/PostSeriesList';
 import { getSeries, getPosts } from '@/util/file';
 
 interface PostPageProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const PostPage = async ({ searchParams }: PostPageProps) => {
   const seriesList = await getSeries('contents/posts');
 
-  const series = searchParams?.series ?? 'All';
+  const series = (await searchParams).series || 'All';
 
   const posts = getPosts('contents/posts').filter((post) => {
     if (series === 'All') return true;
