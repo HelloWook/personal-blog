@@ -8,14 +8,10 @@ interface PostPageProps {
 
 const PostPage = async ({ searchParams }: PostPageProps) => {
   const sp = await searchParams;
-  const raw = sp.series;
+  const raw = sp.series ? sp.series : undefined;
   const series = Array.isArray(raw) ? raw[0] : raw ?? 'All';
 
-  return (
-    <div className='w-full'>
-      <PostSeries series={series} />
-    </div>
-  );
+  return <div className='w-full'>{<PostSeries series={series} />}</div>;
 };
 
 export default PostPage;
