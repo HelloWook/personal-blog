@@ -4,7 +4,7 @@ import { getPosts } from '@/util/file';
 
 export default function Home() {
   const post = getPosts('contents/posts');
-
+  console.log(post);
   return (
     <>
       <Introduce />

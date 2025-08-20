@@ -1,7 +1,7 @@
 import PostCard from '@/components/Post/PostCard/PostCard';
 import PostSeriesList from '@/components/Post/PostSeriesList/PostSeriesList';
 import { getSeries, getPosts } from '@/util/file';
-import Albam from '@/asset/알밤.png';
+
 interface PostPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
@@ -26,7 +26,7 @@ const PostPage = async ({ searchParams }: PostPageProps) => {
       <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
         {posts.map((post, idx) => {
           const { excerpt, fileName, title } = post;
-          return <PostCard key={idx} excerpt={excerpt} fileName={fileName} thumbnail={Albam} title={title} />;
+          return <PostCard key={idx} excerpt={excerpt} fileName={fileName} thumbnail={'/알밤.png'} title={title} />;
         })}
       </div>
     </div>

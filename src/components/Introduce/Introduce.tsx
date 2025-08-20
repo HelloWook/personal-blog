@@ -5,7 +5,7 @@ import SocialLink from './SocialLink/SocialLink';
 
 const Introduce = () => {
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between h-[240px]'>
       <div className='flex flex-col'>
         <IntroMessage />
         <SocialLink />
