@@ -11,6 +11,8 @@ const PostPage = async ({ searchParams }: PostPageProps) => {
   const raw = sp.series ? sp.series : undefined;
   const series = Array.isArray(raw) ? raw[0] : raw ?? 'All';
 
+  console.log(series);
+
   return <div className='w-full'>{<PostSeries series={series} />}</div>;
 };
 
