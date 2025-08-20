@@ -1,6 +1,10 @@
 import PostSeries from '@/components/Post/PostSeries/PostSeries';
 
-const PostPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+interface PostPageProps {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}
+
+const PostPage = async ({ searchParams }: PostPageProps) => {
   const series = (await searchParams)?.series || 'All';
 
   return (
