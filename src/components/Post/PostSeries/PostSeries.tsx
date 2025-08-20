@@ -1,10 +1,13 @@
+import { getSeries } from '@/util/file';
+
 interface PostSeriesProps {
   series: string;
 }
 
 const PostSeries = ({ series }: PostSeriesProps) => {
-  // const seriesList = getSeries('contents/posts');
+  const seriesList = getSeries('contents/posts');
 
+  console.log(seriesList);
   // const posts = getPosts('contents/posts').filter((post) => {
   //   if (series === 'All') return true;
   //   else return post.series === series;
