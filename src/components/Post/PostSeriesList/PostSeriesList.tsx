@@ -9,7 +9,6 @@ interface PostSeriesListProps {
 
 const PostSeriesList = ({ seriesList }: PostSeriesListProps) => {
   const pathname = usePathname();
-  //const searchParams = useSearchParams();
 
   return (
     <div className='flex items-center justify-center gap-6 mb-8'>
