@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 
 @plugin "daisyui" {
-  exclude: rootscrollgutter;
 }
 @plugin "daisyui/theme" {
   name: 'synthwave';
@@ -59,8 +58,8 @@ body {
     @apply shadow-base-content;
   }
 
-  code[data-theme*=' '],
-  code[data-theme*=' '] span {
+  code[data-theme],
+  code[data-theme] span {
     color: var(--shiki-light);
     background-color: var(--shiki-light-bg);
   }
