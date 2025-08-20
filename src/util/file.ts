@@ -27,23 +27,21 @@ const getFileNames = (directory: string) => {
 };
 
 const extractPostContent = (files: string[], directory: string): Post[] => {
-  return files
-    .filter((file) => file.endsWith('.mdx'))
-    .map((file) => {
-      const fileContent = fs.readFileSync(getStaticpath([directory, file]), 'utf-8');
-      const data = matter(fileContent);
-      return {
-        title: data.data.title as string,
-        date: data.data.date as string,
-        tags: data.data.tags as string[],
-        slug: data.data.slug as string,
-        content: data.content,
-        excerpt: data.data.excerpt || data.content.slice(0, 100),
-        thumbnail: data.data.thumbnail,
-        fileName: file.replace('.mdx', ''),
-        series: data.data.series as string,
-      };
-    });
+  return files.map((file) => {
+    const fileContent = fs.readFileSync(getStaticpath([directory, file, 'index.mdx']), 'utf-8');
+    const data = matter(fileContent);
+    return {
+      title: data.data.title as string,
+      date: data.data.date as string,
+      tags: data.data.tags as string[],
+      slug: data.data.slug as string,
+      content: data.content,
+      excerpt: data.data.excerpt || data.content.slice(0, 100),
+      thumbnail: data.data.thumbnail,
+      fileName: file.replace('.mdx', ''),
+      series: data.data.series as string,
+    };
+  });
 };
 
 export { getPosts, getStaticpath, getFile, extractPostContent, getSeries, getFileNames };

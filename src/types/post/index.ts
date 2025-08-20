@@ -4,7 +4,7 @@ export interface Post {
   title: string;
   excerpt: string;
   date: string;
-  thumbnail: string | StaticImageData;
+  thumbnail: string;
   tags?: string[];
   slug: string;
   fileName: string;
