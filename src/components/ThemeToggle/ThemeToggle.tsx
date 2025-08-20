@@ -4,6 +4,7 @@ import React from 'react';
 
 const ThemeToggle = () => {
   const { theme, handleThemeChange } = useTheme();
+
   return (
     <label className=' swap swap-rotate'>
       <input
