@@ -3,13 +3,11 @@ import PostCard from '@/components/Post/PostCard/PostCard';
 import PostSeriesList from '@/components/Post/PostSeriesList/PostSeriesList';
 
 interface PostSeriesProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  series: string;
 }
 
-const PostSeries = async ({ searchParams }: PostSeriesProps) => {
+const PostSeries = async ({ series }: PostSeriesProps) => {
   const seriesList = getSeries('contents/posts');
-
-  const series = (await searchParams)?.series || 'All';
 
   const posts = getPosts('contents/posts').filter((post) => {
     if (series === 'All') return true;

@@ -1,12 +1,11 @@
 import PostSeries from '@/components/Post/PostSeries/PostSeries';
-import { Suspense } from 'react';
 
-const PostPage = () => {
+const PostPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+  const series = (await searchParams)?.series || 'All';
+
   return (
     <div className='w-full'>
-      <Suspense fallback={<div className='text-2xl text-center'>Loading...</div>}>
-        <PostSeries />
-      </Suspense>
+      <PostSeries series={series} />
     </div>
   );
 };
