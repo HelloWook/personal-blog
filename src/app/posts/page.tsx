@@ -13,11 +13,17 @@ const PostPage = async ({ searchParams }: PostPageProps) => {
   const raw = sp.series ? sp.series : undefined;
   const series = Array.isArray(raw) ? raw[0] : raw ?? 'All';
 
+  console.log(series);
+
   const seriesList = getSeries('contents/posts');
   const postList = getPosts('contents/posts').filter((post) => {
     if (series === 'All') return true;
     else return post.series === series;
   });
+
+  console.log(seriesList);
+  console.log(postList);
+
   return <div className='w-full'>{<PostSeries series={series} postList={postList} seriesList={seriesList} />}</div>;
 };
 
