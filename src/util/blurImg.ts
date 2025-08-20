@@ -14,7 +14,7 @@ const getBlurImg = async (imgSrc: string) => {
 
 const getBlurLocalImg = async (imgPath: string) => {
   try {
-    const fullPath = path.join(process.cwd(), imgPath);
+    const fullPath = path.join(process.cwd(), 'public', imgPath);
     const buffer = fs.readFileSync(fullPath);
     const { base64 } = await getPlaiceholder(buffer, { size: 5 });
     return base64;

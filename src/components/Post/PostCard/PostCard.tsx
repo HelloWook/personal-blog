@@ -7,20 +7,13 @@ import { getBlurLocalImg } from '@/util/blurImg';
 type PostCardProps = Pick<Post, 'title' | 'excerpt' | 'thumbnail' | 'fileName'>;
 
 const PostCard = async ({ title, excerpt, thumbnail, fileName }: PostCardProps) => {
-  const blurDataURL = await getBlurLocalImg('/public/알밤.png');
+  const blurDataURL = await getBlurLocalImg('/알밤.png');
 
   return (
-    <Link href={`/posts/${fileName}`} className='w-full duration-300 shadow-sm group hover:scale-105 rounded-2xl theme-shadow-color '>
+    <Link href={`/posts/${fileName}`} className='theme-shadow-color card-frame'>
       <div className='card'>
         <figure className='relative w-full h-40 overflow-hidden rounded-t-2xl '>
-          <Image
-            src={thumbnail}
-            alt='임시 데이터'
-            fill
-            className='object-cover transition-transform duration-300 group-hover:scale-110'
-            blurDataURL={blurDataURL}
-            placeholder='blur'
-          />
+          <Image src={thumbnail} alt='임시 데이터' fill className='object-cover' blurDataURL={blurDataURL} placeholder='blur' />
         </figure>
         <div className='p-4 card-body'>
           <h3>{title}</h3>
