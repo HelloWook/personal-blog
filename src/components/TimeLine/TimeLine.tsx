@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity } from '@/Data/activity';
+import { Activity } from '@/data/activity';
 
 interface TimeLineProps {
   activities: Activity[];
