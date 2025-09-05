@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Project, Release } from '@/Data/project';
+import type { Project, Release } from '@/data/project';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getBlurLocalImg } from '@/util/blurImg';
