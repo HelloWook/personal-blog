@@ -2,12 +2,10 @@ import React from 'react';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import Link from 'next/link';
 import DrawButton from '../Drawer/DrawButton';
-import { headers } from 'next/headers';
-import { Theme } from '@/util/tokenManger';
+import { themeManager } from '@/util/tokenManger';
 
 const Header = async () => {
-  const h = await headers();
-  const theme = (h.get('x-theme') ?? 'pastel') as Theme;
+  const theme = await themeManager().then((manager) => manager.getTheme());
 
   return (
     <header className='flex items-center w-full py-4 mb-4'>

@@ -11,7 +11,7 @@ interface ThemeToggleProps {
 const ThemeToggle = ({ defaultTheme }: ThemeToggleProps) => {
   const [theme, setTheme] = React.useState<Theme>(defaultTheme);
 
-  const debounceWrapper = useRef(debounceAsync(1000)).current;
+  const debounceWrapper = useRef(debounceAsync(300)).current;
 
   const saveTheme = async (nextTheme: Theme) => {
     await fetch('/api/theme', {
