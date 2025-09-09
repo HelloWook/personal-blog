@@ -1,9 +1,13 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getFileNames } from '@/util/file';
 import rehypePrettyCode, { type Options } from 'rehype-pretty-code';
+import rehypeUnwrapImages from 'rehype-unwrap-images';
+
 import { Metadata } from 'next';
 import parseMdx from '@/util/parseMDX';
 import Pre from '@/components/Pre/Pre';
+import Image from 'next/image';
+import { getBlurLocalImg } from '@/util/blurImg';
 
 interface PostDetailPageProps {
   params: Promise<{ fileName: string }>;
@@ -45,11 +49,29 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
         source={mdxContent}
         options={{
           mdxOptions: {
-            rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
+            rehypePlugins: [rehypeUnwrapImages, [rehypePrettyCode, prettyCodeOptions]],
           },
         }}
         components={{
+          p: (props) => <p {...props} className='my-4 leading-8' />,
+          h2: (props) => <h2 {...props} className='mt-10 mb-3 text-2xl font-bold' />,
+          h3: (props) => <h3 {...props} className='mt-8 mb-2 text-xl font-semibold' />,
           pre: Pre,
+          img: async (props) => {
+            const blurDataURL = await getBlurLocalImg(props.src);
+            return (
+              <h2 className='relative w-full my-6 h-100'>
+                <Image
+                  {...props}
+                  alt={props.alt ?? '커버 이미지'}
+                  fill
+                  className='object-cover rounded-xl'
+                  blurDataURL={blurDataURL}
+                  placeholder='blur'
+                />
+              </h2>
+            );
+          },
         }}
       />
     </article>

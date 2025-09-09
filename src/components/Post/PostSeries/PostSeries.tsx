@@ -50,7 +50,7 @@ const PostSeries = ({ postList, seriesList }: PostSeriesProps) => {
             key={idx}
             excerpt={post.excerpt}
             fileName={post.fileName}
-            thumbnail={'/알밤.png'}
+            thumbnail={post.thumbnail}
             title={post.title}
             blurDataURL={post.blurDataURL}
           />
