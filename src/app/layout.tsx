@@ -4,7 +4,6 @@ import '../styles/global.css';
 import Header from '@/components/Header/Header';
 import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
-// Theme is now applied via localStorage early script; no headers needed
 
 export const metadata: Metadata = {
   title: 'HelloWook 블로그',
