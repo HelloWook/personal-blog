@@ -4,7 +4,6 @@ import '../styles/global.css';
 import Header from '@/components/Header/Header';
 import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'HelloWook 블로그',
@@ -17,11 +16,29 @@ export default async function RootLayouta({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const h = await headers();
-  const theme = h.get('x-theme') ?? 'pastel';
-
   return (
-    <html lang='ko' data-theme={theme} className={suite.className}>
+    <html lang='ko' className={suite.className} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+             function getCookie(name) {
+              const match = document.cookie.match(
+                new RegExp('(?:^|; )' + name + '=([^;]*)')
+              );
+              return match ? decodeURIComponent(match[1]) : null;
+            }
+            (function(){
+                  const t = getCookie('theme') ;
+                  console.log('Initial theme:', t);
+                    var theme = t === 'synthwave' ? 'synthwave' : 'pastel';
+                    var el = document.documentElement;
+                    el.setAttribute('data-theme', theme);
+            })();
+            `,
+          }}
+        />
+      </head>
       <body>
         <Drawer />
         <div className='max-w-[900px] w-[90%] min-h-screen m-auto'>
