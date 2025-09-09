@@ -42,9 +42,9 @@ export const projects: Project[] = [
     title: 'MoneyWise',
     description: '똑똑한 일정 관리',
     thumbnail: '/project/moneyWise.png',
-    url: 'https://money-wise-delta.vercel.app/',
+    url: 'https://github.com/NLL-MoneyWise/MoneyWise',
     skill: ['Next'],
-    type: '운영 중',
+    type: '운영 종료',
     role: ['프론트'],
   },
   {
