@@ -1,45 +1,54 @@
 import { render, screen } from '@testing-library/react';
 import Header from './Header';
+
+// 클라이언트 컴포넌트들을 모킹
+jest.mock('../Drawer/DrawButton', () => {
+  return function MockDrawButton() {
+    return <div data-testid='draw-button'>DrawButton</div>;
+  };
+});
+
+jest.mock('../ThemeToggle/ThemeContainer', () => {
+  return function MockThemeContainer() {
+    return <div data-testid='theme-container'>ThemeContainer</div>;
+  };
+});
+
 describe('Header', () => {
-  it('컴포넌트가 정상적으로 렌더링된다', () => {
-    render(<Header />);
-    const linkElement = screen.getByText('HelloWook.life');
-    expect(linkElement).toBeInTheDocument();
+  beforeEach(() => {
+    // 각 테스트 전에 DOM을 클리어
+    jest.clearAllMocks();
   });
 
-  it('Posts 링크가 정상적으로 렌더링된다', () => {
+  it('헤더가 정상적으로 렌더링된다', () => {
     render(<Header />);
+    expect(screen.getByText('HelloWook.life')).toBeInTheDocument();
+    expect(screen.getByTestId('draw-button')).toBeInTheDocument();
+    expect(screen.getByTestId('theme-container')).toBeInTheDocument();
+  });
+
+  it('내비게이션 링크들이 올바르게 렌더링된다', () => {
+    render(<Header />);
+
+    // Posts 링크 확인
     const postsLink = screen.getByText('Posts');
     expect(postsLink).toBeInTheDocument();
-  });
+    expect(postsLink.closest('a')).toHaveAttribute('href', '/posts');
 
-  it('Posts 링크가 올바른 경로로 연결된다', () => {
-    render(<Header />);
-    const postsLink = screen.getByText('Posts');
-    expect(postsLink).toHaveAttribute('href', '/posts');
-  });
-
-  it('Abouts 링크가 정상적으로 렌더링된다', () => {
-    render(<Header />);
+    // Abouts 링크 확인
     const aboutsLink = screen.getByText('Abouts');
     expect(aboutsLink).toBeInTheDocument();
-  });
+    expect(aboutsLink.closest('a')).toHaveAttribute('href', '/abouts');
 
-  it('Abouts 링크가 올바른 경로로 연결된다', () => {
-    render(<Header />);
-    const aboutsLink = screen.getByText('Abouts');
-    expect(aboutsLink).toHaveAttribute('href', '/abouts');
-  });
-
-  it('projects 링크가 정상적으로 렌더링된다', () => {
-    render(<Header />);
-    const projectsLink = screen.getByText('projects');
+    // Projects 링크 확인
+    const projectsLink = screen.getByText('Projects');
     expect(projectsLink).toBeInTheDocument();
+    expect(projectsLink.closest('a')).toHaveAttribute('href', '/projects');
   });
 
-  it('projects 링크가 올바른 경로로 연결된다', () => {
+  it('메인 로고가 홈으로 연결된다', () => {
     render(<Header />);
-    const projectsLink = screen.getByText('projects');
-    expect(projectsLink).toHaveAttribute('href', '/projects');
+    const logo = screen.getByText('HelloWook.life');
+    expect(logo.closest('a')).toHaveAttribute('href', '/');
   });
 });

@@ -7,12 +7,7 @@ const Footer = () => {
       <aside>
         <p>
           Copyright © {new Date().getFullYear()} - All right reserved by{' '}
-          <Link
-            href={'https://github.com/HelloWook'}
-            className='underline-animation'
-            rel='noopener noreferrer'
-            target='_blank'
-          >
+          <Link href={'https://github.com/HelloWook'} className='underline-animation' rel='noopener noreferrer' target='_blank'>
             HelloWook
           </Link>
         </p>

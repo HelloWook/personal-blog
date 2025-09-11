@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { Post } from '@/types/post';
 import { getBlurLocalImg } from './blurImg';
-// 빌더 패턴으로 리펙토링
+
 const getPosts = (directory: string) => extractPostContent(directory);
 
 const getStaticpath = (urls: string[]) => path.join(process.cwd(), ...urls);

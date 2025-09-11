@@ -1,4 +1,10 @@
-export const debounceAsync = (time: number) => {
+/**
+ * 쓰트롤링 함수 (비동기)
+ * @param time 밀리초
+ * @returns  콜백 함수 반환
+ */
+
+export const ThrottlingAsync = (time: number) => {
   let timeoutId: NodeJS.Timeout;
 
   return (callback: () => Promise<void>): Promise<void> => {

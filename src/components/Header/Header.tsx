@@ -1,12 +1,9 @@
 import React from 'react';
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import Link from 'next/link';
 import DrawButton from '../Drawer/DrawButton';
-import { themeManager } from '@/util/tokenManger';
+import ThemeContainer from '../ThemeToggle/ThemeContainer';
 
-const Header = async () => {
-  const theme = await themeManager().then((manager) => manager.getTheme());
-
+const Header = () => {
   return (
     <header className='flex items-center w-full py-4 mb-4'>
       <Link className='justify-center flex-1 text-xl' href={'/'}>
@@ -22,7 +19,7 @@ const Header = async () => {
         <Link href={'/projects'} className='underline-animation'>
           Projects
         </Link>
-        <ThemeToggle defaultTheme={theme} />
+        <ThemeContainer />
       </div>
       <DrawButton />
     </header>

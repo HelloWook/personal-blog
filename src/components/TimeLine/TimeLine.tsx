@@ -17,7 +17,9 @@ const TimeLine = ({ activities }: TimeLineProps) => {
             <div className={`${idx % 2 === 0 ? 'mb-10 timeline-start md:text-end ' : ' timeline-end md:mb-10'}`}>
               <time className='font-mono italic'>{activitie.date}</time>
               <div className='text-lg font-black'>{activitie.title}</div>
-              <p className='text-start'>{activitie.description}</p>
+              <p data-testid={`social-link-${activitie.title}`} className='text-start'>
+                {activitie.description}
+              </p>
             </div>
             <hr />
           </li>
