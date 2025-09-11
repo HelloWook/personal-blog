@@ -33,22 +33,21 @@ describe('Header', () => {
     // Posts 링크 확인
     const postsLink = screen.getByText('Posts');
     expect(postsLink).toBeInTheDocument();
-    expect(postsLink.closest('a')).toHaveAttribute('href', '/posts');
+    expect(screen.getByRole('link', { name: 'Posts' })).toHaveAttribute('href', '/posts');
 
     // Abouts 링크 확인
     const aboutsLink = screen.getByText('Abouts');
     expect(aboutsLink).toBeInTheDocument();
-    expect(aboutsLink.closest('a')).toHaveAttribute('href', '/abouts');
+    expect(screen.getByRole('link', { name: 'Abouts' })).toHaveAttribute('href', '/abouts');
 
     // Projects 링크 확인
     const projectsLink = screen.getByText('Projects');
     expect(projectsLink).toBeInTheDocument();
-    expect(projectsLink.closest('a')).toHaveAttribute('href', '/projects');
+    expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects');
   });
 
   it('메인 로고가 홈으로 연결된다', () => {
     render(<Header />);
-    const logo = screen.getByText('HelloWook.life');
-    expect(logo.closest('a')).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'HelloWook.life' })).toHaveAttribute('href', '/');
   });
 });

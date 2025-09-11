@@ -15,7 +15,6 @@ describe('Footer', () => {
 
   it('링크가 올바르게 설정되어 있다', () => {
     render(<Footer />);
-    const link = screen.getByText('HelloWook').closest('a');
-    expect(link).toHaveAttribute('href', 'https://github.com/HelloWook');
+    expect(screen.getByRole('link', { name: 'HelloWook' })).toHaveAttribute('href', 'https://github.com/HelloWook');
   });
 });
