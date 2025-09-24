@@ -1,0 +1,173 @@
+---
+title: 'Goodbye, useEffect: David Khourshid 정리'
+excerpt: 'David Khourshid의 useEffect 대신 사용하는 방법을 정리한 글'
+date: '2025-09-24'
+thumbnail: '/thumbnail/goodbye-useEffect/index.png'
+tags:
+  - React
+  - Hook
+  - useEffect
+slug: goodbye-useEffect
+series: Article
+---
+
+![Goodbye, useEffect: David Khourshid 정리](/thumbnail/goodbye-useEffect/index.png)
+
+# Goodbye, useEffect: David Khourshid 정리
+
+최근 코드를 작성하다 useEffect에 대해 고민하게 되어 XState 개발자인 David Khourshid의 useEffect 강연을 정리한 글입니다. 이 글을 통해 useEffect의 진짜 목적을 이해하고, 더 나은 React 코드를 작성하는 데 도움이 되기를 바랍니다.
+
+## useEffect
+
+![리엑트 생명주기](/thumbnail/goodbye-useEffect/lifecycle.png)
+
+리엑트에서 생명주기는 다음과 같습니다
+
+`componentDidMount` : 컴포넌트가 마운트될 때 실행되고,
+
+`componentDidUpdate` : 컴포넌트가 업데이트될 때 실행되고,
+
+`componentWillUnmount` : 컴포넌트가 언마운트될 때 실행됩니다.
+
+보통 프론트엔드 개발자는 다음과 같이 useEffect를 생명주기에 맞춰 이해하고 사용합니다.
+
+```js
+useEffect(() => {
+  // componentDidMount
+}, []);
+
+useEfff(() => {
+  // componentDidUpdate
+}, [deps]);
+
+useEfff(() => {
+  return () => {
+    // componentWillUnmount
+  };
+}, []);
+```
+
+다만 이런 방식은 useEffect의 본질을 흐리고, 예기치 않은 버그의 원인이 됩니다.
+
+예시로 프론트엔드 개발자라면 한 번쯤은 겪어봤을만한 무한 루프나 React의 Strict Mode에서 이펙트가 두 번 실행되는 등 예기치 않은 버그의 원인이 됩니다.
+
+그렇다면 useEffect의 진짜 사용처는 무엇일까요? David Khourshid는 useEffect가 **동기화(Synchronization)** 를 위한 훅이라고 강조합니다.
+
+공식 문서에서 useEffect는 React의 상태(state)를 외부 시스템과 똑같이 맞추는 역할을 한다고 정의합니다. 여기서 '외부 시스템'이란 React의 통제 밖에 있는 모든 것을 의미합니다.
+
+## useEffect의 진짜 목적: 동기화 (Synchronization)
+
+```js
+DOM 이벤트: window.addEventListener('scroll', ...)
+
+타이머: setInterval(), setTimeout()
+
+외부 라이브러리: 지도 라이브러리(Kakao Maps)나 차트 라이브러리(D3.js) 연동
+
+네트워크 구독: 채팅 소켓, Firebase 구독 등
+```
+
+이런 작업들은 컴포넌트가 '존재하는 동안' 외부와 계속 상호작용해야 하며, 컴포넌트가 사라질 때 연결을 '끊어주는(clean-up)' 작업이 필수적입니다. useEffect의 return문이 클린업 함수를 반환하는 이유가 바로 여기에 있습니다.
+
+```js
+useEffect(() => {
+  // 외부 시스템과 연결 (구독 시작)
+  const handler = () => console.log('scrolled!');
+  window.addEventListener('scroll', handler);
+
+  // 컴포넌트가 사라질 때 연결 해제 (구독 취소)
+  return () => {
+    window.removeEventListener('scroll', handler);
+  };
+}, []); // 의존성 배열은 이 동기화가 언제 다시 일어나야 하는지를 결정
+```
+
+## 그럼 작업들은 어디서? 바로 이벤트 핸들러!
+
+useEffect의 역할이 동기화라면, API 호출처럼 한 번만 실행하고 잊어버리는(fire-and-forget) 성격의 작업들은 어디서 처리해야 할까요? 정답은 바로 **이벤트 핸들러 (onClick, onSubmit 등)** 입니다.
+
+어떤 데이터를 가져오는 이유는 컴포넌트가 **렌더링**되었기 때문이 아니라, 사용자가 **버튼을 클릭**했거나 **페이지에 처음 진입**했기 때문입니다. 즉, 이러한 부수 효과(Side Effect)의 진짜 원인은 사용자 이벤트 또는 명확한 시점에 발생해야 하는 액션에 있습니다.
+
+이처럼 useEffect는 상태에 따른 동기화를, 이벤트 핸들러는 사용자 액션에 따른 일회성 작업을 담당하도록 역할을 나누는 것이 핵심입니다. 이러한 역할 분리를 더 명확하게 하려면, 우리는 상태를 관리하는 로직 자체를 부수 효과로부터 분리해야 합니다.
+
+바로 여기서 '순수한 상태 관리' 라는 개념이 등장합니다. 순수 함수를 이해함으로써 우리는 '상태 변경 로직'과 '부수 효과'를 명확히 분리할 수 있게 되고, 이는 곧 useEffect가 담당할 부분과 이벤트 핸들러가 담당할 부분을 깔끔하게 나누는 근본적인 기준이 됩니다. 그렇다면 순수 함수란 무엇일까요?
+
+### 순수함수
+
+순수 상태를 알기 휘해선 순수 함수를 알아야 합니다.
+
+순수 함수에는 다음과 같은 두 가지 간단한 규칙이 있습니다.
+
+**1. 같은 입력(Input)에 대해 항상 같은 출력(Output)을 반환한다.**
+
+**2. 부수 효과(Side Effect)가 없다.**
+
+이 두 가지 규칙을 기반으로 순수 함수는 함수 내부에서 외부의 어떤 것도 변경하지 않고, 오직 입력을 받아 계산하고, 새로운 값을 반환하는 일만 합니다.
+
+부수 효과란 함수 외부의 상태를 변경하거나 (예: API 호출, 전역 변수 수정, console.log 출력, 파일 저장 등) 외부 시스템에 영향을 미치는 모든 행위를 말합니다.
+
+### 이것을 상태관리에 적용한다면
+
+순수한 상태 관리는 상태를 변경하는 로직을 바로 이 '순수 함수'로 만드는 것을 의미합니다. 가장 대표적인 예가 리듀서(Reducer) 패턴입니다.
+
+상태 관리 로직을 다음과 같은 순수한 공식으로 만드는 것이죠.
+
+**(현재 상태, 액션/이벤트) => 새로운 상태**
+
+이 공식에 따라 상태를 관리하는 함수(리듀서)는 다음과 같이 동작합니다.
+
+**입력: 현재 상태와 상태를 어떻게 바꿀지에 대한 정보가 담긴 액션을 받습니다.**
+
+**계산: 이 두 가지 입력을 바탕으로 '다음 상태'가 어때야 할지 계산만 합니다.**
+
+**출력: 계산된 '새로운 상태' 객체를 반환합니다.**
+
+### ✅ 순수한 상태 관리 (리듀서 예시)
+
+```js
+// 이 reducer 함수는 순수 함수입니다.
+// 1. state와 action이 같으면 항상 같은 newState를 반환합니다.
+// 2. API 호출 같은 Side Effect가 전혀 없습니다.
+function counterReducer(state, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      // 기존 state를 직접 바꾸지 않고, 새로운 객체를 반환합니다.
+      return { ...state, count: state.count + 1 };
+    case 'DECREMENT':
+      return { ...state, count: state.count - 1 };
+    default:
+      return state;
+  }
+}
+
+const initialState = { count: 0 };
+const incrementAction = { type: 'INCREMENT' };
+
+// 실행
+const nextState = counterReducer(initialState, incrementAction); // { count: 1 }을 반환
+```
+
+### ❌ 순수하지 않은 상태 관리
+
+반면, 순수하지 않은 방식은 상태 변경 로직과 다른 작업들이 뒤섞여 있는 경우를 말합니다.
+
+```js
+// 순수하지 않은 함수 (Side Effect가 섞여 있음)
+let count = 0; // 외부 상태
+
+function incrementAndLog() {
+  count++; // 외부 상태를 직접 변경 (Side Effect!)
+  console.log('카운트가 증가했습니다.'); // 외부(콘솔)에 영향을 줌 (Side Effect!)
+  // 반환값이 일정하지 않거나 없음
+}
+```
+
+이를 바탕으로 우리는 외부세계의 개입 없는 **관심사의 분리**를 이룰 수 있습니다.
+
+즉, 순수 함수를 이용해 상태 변경 로직을 관리하고, 그 외 네트워크 요청 같은 부수 효과는 이벤트 핸들러 같은 다른 영역에서 명확하게 처리하도록 하는 것이죠.
+
+이로써 useEffect는 오직**React 상태와 외부 시스템을 동기화하는 본연의 역할** 에 집중할 수 있게 됩니다.
+
+## 참고 자료
+
+- [Goodbye, useEffect: David Khourshid](https://www.youtube.com/watch?v=HPoC-k7Rxwo)

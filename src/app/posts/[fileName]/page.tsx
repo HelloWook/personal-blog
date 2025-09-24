@@ -56,6 +56,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           p: (props) => <p {...props} className='my-4 leading-8' />,
           h2: (props) => <h2 {...props} className='mt-10 mb-3 text-2xl font-bold' />,
           h3: (props) => <h3 {...props} className='mt-8 mb-2 text-xl font-semibold' />,
+          a: (props) => <a {...props} className='text-blue-500 underline-animation' />,
           pre: Pre,
           img: async (props) => {
             const blurDataURL = await getBlurLocalImg(props.src);

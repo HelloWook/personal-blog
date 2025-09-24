@@ -1,8 +1,9 @@
 'use client';
-import { debounceAsync } from '@/util/debounce';
+import { ThrottlingAsync } from '@/util/Throttling';
 import { Theme } from '@/util/tokenManger';
 
 import React, { useRef } from 'react';
+import saveTheme from '@/service/saveTheme';
 
 interface ThemeToggleProps {
   defaultTheme: Theme;
@@ -11,20 +12,13 @@ interface ThemeToggleProps {
 const ThemeToggle = ({ defaultTheme }: ThemeToggleProps) => {
   const [theme, setTheme] = React.useState<Theme>(defaultTheme);
 
-  const debounceWrapper = useRef(debounceAsync(300)).current;
-
-  const saveTheme = async (nextTheme: Theme) => {
-    await fetch('/api/theme', {
-      method: 'POST',
-      body: JSON.stringify({ theme: nextTheme }),
-    });
-  };
+  const throttleWrapper = useRef(ThrottlingAsync(300)).current;
 
   const handleThemeChange = async () => {
     const nextTheme = theme === 'synthwave' ? 'pastel' : 'synthwave';
     document.documentElement.setAttribute('data-theme', nextTheme);
     setTheme(nextTheme);
-    debounceWrapper(() => saveTheme(nextTheme));
+    throttleWrapper(() => saveTheme(nextTheme));
   };
 
   return (

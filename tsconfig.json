@@ -23,13 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["**/*.test.ts", "**/*.test.tsx", "**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules", "cypress", "./cypress.config.ts"]
 }
