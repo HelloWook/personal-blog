@@ -1,13 +1,13 @@
-import { ThrottlingAsync } from './Throttling';
+import { throttlingAsync } from './throttling';
 
-describe('ThrottlingAsync', () => {
+describe('throttlingAsync', () => {
   beforeAll(() => {
     jest.useFakeTimers();
   });
 
   it('여러 번 호출해도 마지막 호출만 실행된다', async () => {
     const callback = jest.fn().mockResolvedValue(undefined);
-    const throttled = ThrottlingAsync(300);
+    const throttled = throttlingAsync(300);
 
     // 두 번 연속 호출
     throttled(callback);
@@ -29,7 +29,7 @@ describe('ThrottlingAsync', () => {
 
   it('지정된 시간 내에 재호출되면 이전 호출은 취소된다', async () => {
     const callback = jest.fn().mockResolvedValue(undefined);
-    const throttled = ThrottlingAsync(300);
+    const throttled = throttlingAsync(300);
 
     throttled(callback);
     jest.advanceTimersByTime(200);

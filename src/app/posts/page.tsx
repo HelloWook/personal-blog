@@ -1,10 +1,10 @@
 import PostSeries from '@/components/Post/PostSeries/PostSeries';
-import { getPostWithBlur, getSeries } from '@/util/file';
+import { getPostsWithBlurData, getAllSeries } from '@/util/file';
 import { Suspense } from 'react';
 
 const PostPage = async () => {
-  const postList = await getPostWithBlur();
-  const seriesList = getSeries('contents/posts');
+  const postList = await getPostsWithBlurData();
+  const seriesList = getAllSeries();
 
   return (
     <div className='w-full'>
