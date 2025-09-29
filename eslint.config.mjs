@@ -31,6 +31,10 @@ const eslintConfig = [
       ...jestDomPlugin.configs.recommended.rules,
       ...testingLibraryPlugin.configs.react.rules,
     },
+    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
   },
 ];
 

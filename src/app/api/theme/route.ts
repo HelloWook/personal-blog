@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { themeManager } from '@/util/tokenManger';
+import { themeManager } from '@/utils/tokenManger';
 
 export async function POST(request: NextRequest) {
   try {

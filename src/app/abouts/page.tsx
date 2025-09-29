@@ -1,7 +1,7 @@
 import Introduce from '@/components/Introduce/Introduce';
 import TimeLine from '@/components/TimeLine/TimeLine';
 import React from 'react';
-import { Activities } from '@/data/activity';
+import { Activities } from '@/datas/activity';
 import SubTitle from '@/components/SubTitle/SubTitle';
 
 const About = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { projects } from '@/data/project';
+import { projects } from '@/datas/project';
 import ProjectCard from '../ProjectCard/ProjectCard';
 
 const ProjectList = () => {

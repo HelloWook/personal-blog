@@ -1,10 +1,10 @@
 import Introduce from '@/components/Introduce/Introduce';
 import PostCard from '@/components/Post/PostCard/PostCard';
-import { getPostWithBlur } from '@/util/file';
+import { getPostsWithBlurData } from '@/utils/file';
 import SubTitle from '@/components/SubTitle/SubTitle';
 
 export default async function Home() {
-  const posts = await getPostWithBlur();
+  const posts = await getPostsWithBlurData();
 
   return (
     <>

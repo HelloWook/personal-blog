@@ -1,9 +1,9 @@
 'use client';
-import { ThrottlingAsync } from '@/util/Throttling';
-import { Theme } from '@/util/tokenManger';
+import { throttlingAsync } from '@/utils/throttling';
+import { Theme } from '@/utils/tokenManger';
 
 import React, { useRef } from 'react';
-import saveTheme from '@/service/saveTheme';
+import saveTheme from '@/services/saveTheme';
 
 interface ThemeToggleProps {
   defaultTheme: Theme;
@@ -12,7 +12,7 @@ interface ThemeToggleProps {
 const ThemeToggle = ({ defaultTheme }: ThemeToggleProps) => {
   const [theme, setTheme] = React.useState<Theme>(defaultTheme);
 
-  const throttleWrapper = useRef(ThrottlingAsync(300)).current;
+  const throttleWrapper = useRef(throttlingAsync(300)).current;
 
   const handleThemeChange = async () => {
     const nextTheme = theme === 'synthwave' ? 'pastel' : 'synthwave';

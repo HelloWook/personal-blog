@@ -4,7 +4,7 @@
  * @returns  콜백 함수 반환
  */
 
-export const ThrottlingAsync = (time: number) => {
+export const throttlingAsync = (time: number) => {
   let timeoutId: NodeJS.Timeout;
 
   return (callback: () => Promise<void>): Promise<void> => {

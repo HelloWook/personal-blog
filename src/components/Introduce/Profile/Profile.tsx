@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { getBlurLocalImg } from '@/util/blurImg';
+import { getBlurLocalImg } from '@/utils/blurImg';
 
 const Profile = async () => {
   const blurData = await getBlurLocalImg('/알밤.png');
