@@ -93,7 +93,7 @@ export default async function RootLayouta({
               '@type': 'Person',
               name: 'HelloWook',
               description: '프론트엔드 개발자',
-              url: 'https://hellowook.dev',
+              url: 'https://hellowook.com',
               sameAs: ['https://github.com/HelloWook'],
               knowsAbout: ['Frontend Development', 'React', 'Next.js', 'TypeScript', 'JavaScript'],
             }),
