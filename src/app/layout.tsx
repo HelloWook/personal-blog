@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL('https://www.hellowook.com'),
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
