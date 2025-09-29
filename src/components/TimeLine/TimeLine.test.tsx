@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import TimeLine from './TimeLine';
-import { Activities } from '@/data/activity';
+import { Activities } from '@/datas/activity';
 
 describe('TimeLine', () => {
   it('정상적으로 렌더링된다', () => {

@@ -1,4 +1,4 @@
-import { buildPath } from '@/util/file';
+import { buildPath } from '@/utils/file';
 import fs from 'fs';
 import matter from 'gray-matter';
 

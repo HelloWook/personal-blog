@@ -1,9 +1,9 @@
 'use client';
-import { throttlingAsync } from '@/util/throttling';
-import { Theme } from '@/util/tokenManger';
+import { throttlingAsync } from '@/utils/throttling';
+import { Theme } from '@/utils/tokenManger';
 
 import React, { useRef } from 'react';
-import saveTheme from '@/service/saveTheme';
+import saveTheme from '@/services/saveTheme';
 
 interface ThemeToggleProps {
   defaultTheme: Theme;

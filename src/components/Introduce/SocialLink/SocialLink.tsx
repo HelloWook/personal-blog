@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-import socialLinks from '@/data/socialLinks';
+import socialLinks from '@/datas/socialLinks';
 const SocialLink = () => {
   return (
     <div className='flex gap-3 mt-4'>

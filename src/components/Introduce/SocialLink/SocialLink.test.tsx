@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import SocialLink from './SocialLink';
-import socialLinks from '@/data/socialLinks';
+import socialLinks from '@/datas/socialLinks';
 
 describe('SocialLink', () => {
   it('정상적으로 렌더링된다', () => {

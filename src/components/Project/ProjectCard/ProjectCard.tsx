@@ -1,8 +1,8 @@
 import React from 'react';
-import type { Project, Release } from '@/data/project';
+import type { Project, Release } from '@/datas/project';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getBlurLocalImg } from '@/util/blurImg';
+import { getBlurLocalImg } from '@/utils/blurImg';
 
 const ProjectCard = async ({ title, thumbnail, description, url, type, role, skill }: Project) => {
   const releaseMap: Record<Release, React.ReactNode> = {

@@ -1,4 +1,4 @@
-import { Theme } from '@/util/tokenManger';
+import { Theme } from '@/utils/tokenManger';
 
 const saveTheme = async (nextTheme: Theme) => {
   await fetch('/api/theme', {

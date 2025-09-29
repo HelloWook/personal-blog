@@ -7,7 +7,7 @@ import rehypeUnwrapImages from 'rehype-unwrap-images';
 
 import Pre from '@/components/Pre/Pre';
 import Image from 'next/image';
-import { getBlurLocalImg } from '@/util/blurImg';
+import { getBlurLocalImg } from '@/utils/blurImg';
 
 interface PostDetailProps {
   mdxContent: string;

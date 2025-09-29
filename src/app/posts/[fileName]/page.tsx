@@ -1,7 +1,7 @@
-import { getAllPostFileNames } from '@/util/file';
+import { getAllPostFileNames } from '@/utils/file';
 
 import { Metadata } from 'next';
-import parseMdx from '@/util/parseMDX';
+import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
 
 interface PostDetailPageProps {

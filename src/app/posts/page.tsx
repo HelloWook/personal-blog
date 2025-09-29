@@ -1,5 +1,5 @@
 import PostSeries from '@/components/Post/PostSeries/PostSeries';
-import { getPostsWithBlurData, getAllSeries } from '@/util/file';
+import { getPostsWithBlurData, getAllSeries } from '@/utils/file';
 import { Suspense } from 'react';
 
 const PostPage = async () => {
