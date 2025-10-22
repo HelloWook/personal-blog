@@ -1,0 +1,184 @@
+---
+title: '가상 스크롤(Virtual Scroll)과 무한 스크롤(Infinite Scroll) 정리'
+excerpt: '가상 스크롤(Virtual Scroll)과 무한 스크롤(Infinite Scroll) 정리한 글글'
+date: '2025-10-22'
+thumbnail: '/thumbnail/scroll-study/index.png'
+tags:
+  - React
+  - Hook
+  - useEffect
+slug: goodbye-useEffect
+series: Article
+---
+
+# 가상 스크롤(Virtual Scroll)과 무한 스크롤(Infinite Scroll) 정리
+
+최근 회사에서 대용량 데이터를 표시하는 화면을 개발하던 중,
+단순한 무한 스크롤 방식만으로는 성능 저하가 발생하는 문제를 경험하게 되었습니다.
+이를 개선하기 위해 가상 스크롤(Virtual Scroll) 기법을 학습하고,
+정리한 내용을 공유하고자 합니다.
+
+## 🌊 무한 스크롤이란?
+
+**무한 스크롤(Infinite Scroll)** 은 사용자가 페이지를 스크롤할 때,
+자동으로 다음 데이터를 불러와 화면에 이어 붙이는 방식입니다.
+즉, 사용자는 “페이지 이동” 없이도 계속해서 새로운 데이터를 볼 수 있습니다.
+
+대표적으로 인스타그램 피드, 트위터 타임라인, 네이버 뉴스 피드 등이
+이 기법을 사용하고 있습니다.
+
+📦 기본적인 무한 스크롤 구현 예시
+
+```js
+const onScroll = useCallback(() => {
+  if (loading || !hasMore) return;
+
+  // 스크롤이 화면 끝 근처(200px 이내)에 도달하면 다음 페이지 요청
+  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 200) {
+    setPage((prevPage) => prevPage + 1);
+  }
+}, [loading, hasMore]);
+
+const loadData = useCallback(async (pageNum) => {
+  try {
+    setLoading(true);
+    const result = await fetchDataPaginated(pageNum, 50);
+
+    if (pageNum === 1) {
+      setData(result.data);
+    } else {
+      setData((prev) => [...prev, ...result.data]);
+    }
+
+    setHasMore(result.hasMore);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
+useEffect(() => {
+  window.addEventListener('scroll', onScroll);
+  return () => window.removeEventListener('scroll', onScroll);
+}, [onScroll]);
+
+useEffect(() => {
+  loadData(1);
+}, []);
+
+useEffect(() => {
+  if (page > 1) loadData(page);
+}, [page]);
+```
+
+## ⚠️ 무한 스크롤의 한계
+
+무한 스크롤은 사용자 경험 측면에서 편리하지만,
+데이터가 많아질수록 브라우저 성능이 급격히 저하되는 단점이 있습니다.
+그 이유는 단순합니다.
+화면에는 보이지 않더라도, 브라우저는 모든 요소를 DOM 트리에 유지하고
+렌더링해야 하기 때문입니다.
+
+즉, 데이터가 많을수록 렌더링에 필요한 CPU와 메모리 자원이 기하급수적으로 증가합니다.
+이 문제를 해결하기 위해 등장한 기법이 바로 **가상 스크롤(Virtual Scroll)**입니다.
+
+## 🚀 가상 스크롤(Virtual Scroll)이란?
+
+가상 스크롤은 사용자에게 실제로 보이는 요소만 렌더링하고,
+화면 밖에 가려진 요소는 렌더링하지 않는 기법입니다.
+
+즉, “브라우저는 적은 수의 DOM만 유지하지만,
+사용자는 마치 전체 데이터가 다 렌더링된 것처럼 느끼게 만드는 기술”
+입니다.
+
+이 방식은 수천~수만 개의 데이터를 표시해야 하는
+대용량 리스트나 피드형 UI에서 특히 효과적입니다.
+인스타그램, 핀터레스트, 유튜브, 쿠팡 등의 서비스에서 활용되고 있습니다.
+
+## 🔍 원리 설명
+
+가상 스크롤의 핵심 원리는 렌더링 범위를 제한하는 것입니다.
+전체 데이터를 한꺼번에 그리지 않고, 현재 화면에 보이는 일부 데이터만 표시합니다.
+
+렌더링 가능한 아이템 수 계산
+예를 들어, 각 아이템의 높이가 50px, 브라우저 높이가 800px이라면
+한 화면에 약 16개의 아이템이 표시됩니다.
+실제 데이터가 1만 개여도 이 16개만 렌더링하면 됩니다.
+
+스크롤 위치에 따른 인덱스 계산을 함수로 만들어 놓고, 스크롤 이벤트에 따라 호출합니다.
+
+그리고 스크롤을 사용자가 자연스럽게 이동하는 것처럼 느껴지기 하기 위해 패딩을 이용해 전체 높이 보정을 합니다.
+
+### 구성요소
+
+```text
+startIndex: 스크롤 위쪽에 보이는 아이템 시작 인덱스
+
+endIndex: 스크롤 위쪽에 보이는 아이템 끝 인덱스
+
+paddingTop: 스크롤 위쪽의 보이지 않는 아이템 총 높이
+
+paddingBottom: 아래쪽의 남은 아이템 총 높이
+
+이렇게 공간을 채워 사용자 입장에서는 “전체 데이터가 다 있는 것처럼” 느껴지게 됩니다.
+```
+
+## 💻 구현 예시
+
+```js
+import React, { useEffect, useState } from 'react';
+
+const VirtualScroll = ({ data }) => {
+  const ITEM_HEIGHT = 50;
+  const viewportHeight = window.innerHeight;
+  const renderCount = Math.ceil(viewportHeight / ITEM_HEIGHT) + 5; // 버퍼 추가
+
+  const [padding, setPadding] = useState({ top: 0, bottom: 0 });
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(renderCount);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const newStartIndex = Math.floor(scrollY / ITEM_HEIGHT);
+      const newEndIndex = newStartIndex + renderCount;
+
+      setStartIndex(newStartIndex);
+      setEndIndex(newEndIndex);
+
+      setPadding({
+        top: newStartIndex * ITEM_HEIGHT,
+        bottom: Math.max((data.length - newEndIndex) * ITEM_HEIGHT, 0),
+      });
+    };
+
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [data]);
+
+  const visibleData = data.slice(startIndex, endIndex);
+
+  return (
+    <div
+      style={{
+        paddingTop: `${padding.top}px`,
+        paddingBottom: `${padding.bottom}px`,
+      }}
+    >
+      {visibleData.map((item) => (
+        <div key={item.id} className='item' style={{ height: `${ITEM_HEIGHT}px` }}>
+          <span className='item-id'>#{item.id}</span>
+          <span className='item-content'>{item.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default VirtualScroll;
+```
+
+## 🎥 시연
+
+![가상 스크롤 시연](/thumbnail/scroll-study/demo.gif)
