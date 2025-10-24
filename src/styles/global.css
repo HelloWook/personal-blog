@@ -81,4 +81,7 @@ body {
   .card-frame {
     @apply w-full duration-300 shadow-sm  rounded-2xl  hover:scale-105;
   }
+  .utterances {
+    @apply w-full max-w-[900px]! mx-auto;
+  }
 }
