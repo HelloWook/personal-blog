@@ -367,21 +367,8 @@ describe('file 유틸리티 함수들', () => {
   describe('getAllPostFileNames', () => {
     it('모든 포스트의 파일명을 중복 제거하고 정렬하여 반환한다', () => {
       const mockFiles = ['post-c', 'post-a', 'post-b', 'post-a']; // 중복 포함
-      const mockParsed = {
-        data: {
-          title: 'Test Post',
-          date: '2023-01-01',
-          tags: ['test'],
-          slug: 'test-post',
-          thumbnail: 'test-thumbnail.png',
-          series: 'test-series',
-        },
-        content: '# Content',
-      };
-
+      
       mockFs.readdirSync.mockReturnValue(mockFiles as any);
-      mockFs.readFileSync.mockReturnValue('test content');
-      mockMatter.mockReturnValue(mockParsed as any);
 
       const result = getAllPostFileNames();
 

@@ -125,7 +125,8 @@ export const getAllPostFileNames = (directory: string = POSTS_DIRECTORY): string
   // Get file names from directory structure, not from parsed posts
   // This ensures we get all posts regardless of locale
   const files = readDirectory(directory);
-  return files.sort();
+  // Remove duplicates and sort
+  return Array.from(new Set(files)).sort();
 };
 
 export const getAllSeries = (directory: string = POSTS_DIRECTORY, locale: string = 'ko'): string[] => {
