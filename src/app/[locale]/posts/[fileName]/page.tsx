@@ -3,19 +3,21 @@ import { getAllPostFileNames } from '@/utils/file';
 import { Metadata } from 'next';
 import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
-import {getLocale} from 'next-intl/server';
 
 interface PostDetailPageProps {
-  params: Promise<{ fileName: string }>;
+  params: Promise<{ locale: string; fileName: string }>;
 }
 export async function generateStaticParams() {
   const fileNames = await getAllPostFileNames();
-  return fileNames.map((fileName) => ({ fileName }));
+  const locales = ['ko', 'en'];
+  
+  return locales.flatMap((locale) =>
+    fileNames.map((fileName) => ({ locale, fileName }))
+  );
 }
 
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
-  const { fileName } = await params;
-  const locale = await getLocale();
+  const { fileName, locale } = await params;
   const { data } = parseMdx(fileName, locale);
 
   return {
@@ -44,8 +46,7 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
 }
 
 export default async function PostDetailPage({ params }: PostDetailPageProps) {
-  const { fileName } = await params;
-  const locale = await getLocale();
+  const { fileName, locale } = await params;
   const { mdxContent, data } = parseMdx(fileName, locale);
 
   return (
