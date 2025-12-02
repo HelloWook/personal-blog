@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import DrawButton from '../Drawer/DrawButton';
 import ThemeContainer from '../ThemeToggle/ThemeContainer';
+import LanguageSelector from '../LanguageSelector/LanguageSelector';
 
 const Header = () => {
   return (
@@ -19,7 +20,10 @@ const Header = () => {
         <Link href={'/projects'} className='underline-animation'>
           Projects
         </Link>
+        <div>
         <ThemeContainer />
+        <LanguageSelector />
+        </div>
       </div>
       <DrawButton />
     </header>

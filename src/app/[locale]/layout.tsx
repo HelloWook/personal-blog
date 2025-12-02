@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer/Footer';
 import suite from '../../utils/suite';
-import '../../styles/global.css';
+import '@/styles/global.css';
 import Header from '@/components/Header/Header';
 import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
