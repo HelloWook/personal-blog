@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Project, Release } from '@/datas/project';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { getBlurLocalImg } from '@/utils/blurImg';
 import {getTranslations} from 'next-intl/server';
 

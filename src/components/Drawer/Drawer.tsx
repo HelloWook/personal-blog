@@ -1,6 +1,6 @@
 'use client';
 import { useDrawerStore } from '@/hooks/useDrawerStore';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { drawerStore } from './DrawerStore';
 import {useTranslations} from 'next-intl';
 
