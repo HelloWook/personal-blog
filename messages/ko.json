@@ -1,0 +1,94 @@
+{
+    "Introduce": {
+        "hello": "안녕하세요!",
+        "like": "를 좋아하는",
+        "developer": "개발자",
+        "name": "남정욱",
+        "dot": "입니다."
+    },
+    "HomePage": {
+      "recentPosts": "최근 포스트",
+      "description": "개발과 관련된 다양한 주제들을 다룹니다"
+    },
+    "Navigation": {
+      "posts": "포스트",
+      "abouts": "소개",
+      "projects": "프로젝트"
+    },
+    "PostPage": {
+      "loading": "로딩 중...",
+      "all": "전체",
+      "posts": "포스트",
+      "allPosts": "전체 포스트",
+      "seriesPosts": "{series} 포스트",
+      "postCount": "{count}개의 포스트"
+    },
+    "ProjectsPage": {
+      "title": "프로젝트 목록",
+      "description": "참여한 프로젝트 목록입니다."
+    },
+    "AboutsPage": {
+      "title": "나의 지난 날들",
+      "description": "저의 발자취 입니다."
+    },
+    "ProjectCard": {
+      "inDevelopment": "개발 중",
+      "inOperation": "운영 중",
+      "operationEnded": "운영 종료",
+      "tempData": "임시 데이터"
+    },
+    "Footer": {
+      "copyright": "Copyright © {year} - All right reserved by"
+    },
+    "activity": {
+      "0": {
+        "title": "동의대학교 컴퓨터 공학과 입학",
+        "description": ""
+      },
+      "1": {
+        "title": "입대",
+        "description": "작전병으로 복무하며 한글 및 엑셀을 활용한 행정 업무 수행"
+      },
+      "2": {
+        "title": "전역",
+        "description": "병장 만기 전역"
+      },
+      "3": {
+        "title": "오픈 소스 컨트리뷰터 수료",
+        "description": "Ant 디자인 시스템 번역 작업 참여"
+      },
+      "4": {
+        "title": "프로그래머스 데브코스 프론트엔드(전공 과정) 수료",
+        "description": ""
+      },
+      "5": {
+        "title": "동의대학교 컴퓨터 공학과 졸업",
+        "description": ""
+      },
+      "6": {
+        "title": "코드잇 단기 심화 과정 수료",
+        "description": ""
+      }
+    },
+    "project": {
+      "0": {
+        "description": "나의 성장 기록"
+      },
+      "1": {
+        "description": "바다에 뛰우는 익명 편지"
+      },
+      "2": {
+        "description": "감정을 기록하는 일기장"
+      },
+      "3": {
+        "description": "똑똑한 일정 관리"
+      },
+      "4": {
+        "description": "대화형 할 일 목록"
+      }
+    },
+    "role": {
+      "frontend": "프론트",
+      "fullStack": "풀스택"
+    }
+}

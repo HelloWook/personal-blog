@@ -5,16 +5,20 @@ import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
 
 interface PostDetailPageProps {
-  params: Promise<{ fileName: string }>;
+  params: Promise<{ locale: string; fileName: string }>;
 }
 export async function generateStaticParams() {
   const fileNames = await getAllPostFileNames();
-  return fileNames.map((fileName) => ({ fileName }));
+  const locales = ['ko', 'en'];
+  
+  return locales.flatMap((locale) =>
+    fileNames.map((fileName) => ({ locale, fileName }))
+  );
 }
 
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
-  const { fileName } = await params;
-  const { data } = parseMdx(fileName);
+  const { fileName, locale } = await params;
+  const { data } = parseMdx(fileName, locale);
 
   return {
     title: data.title,
@@ -23,11 +27,11 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
     authors: [{ name: 'HelloWook' }],
     openGraph: {
       type: 'article',
-      locale: 'ko_KR',
-      url: `https://www.hellowook.com/posts/${fileName}`,
+      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
+      url: `https://www.hellowook.com/${locale}/posts/${fileName}`,
       title: data.title,
       description: data.excerpt,
-      siteName: 'HelloWook 블로그',
+      siteName: locale === 'ko' ? 'HelloWook 블로그' : 'HelloWook Blog',
       publishedTime: data.date,
       images: [
         {
@@ -42,8 +46,8 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
 }
 
 export default async function PostDetailPage({ params }: PostDetailPageProps) {
-  const { fileName } = await params;
-  const { mdxContent, data } = parseMdx(fileName);
+  const { fileName, locale } = await params;
+  const { mdxContent, data } = parseMdx(fileName, locale);
 
   return (
     <>
@@ -68,7 +72,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
             },
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': `https://hellowook.dev/posts/${fileName}`,
+              '@id': `https://hellowook.dev/${locale}/posts/${fileName}`,
             },
           }),
         }}

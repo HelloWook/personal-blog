@@ -1,0 +1,172 @@
+---
+title: 'Goodbye, useEffect: David Khourshid Summary'
+excerpt: 'An article summarizing David Khourshid methods for replacing useEffect'
+date: '2025-09-24'
+thumbnail: '/thumbnail/goodbye-useEffect/index.png'
+tags:
+  - React
+  - Hook
+  - useEffect
+slug: goodbye-useEffect
+series: Article
+---
+
+# Goodbye, useEffect: David Khourshid Summary
+
+Recently, while writing code, I found myself contemplating useEffect, so I've compiled this article based on a lecture by David Khourshid, the developer of XState, about useEffect. I hope this article helps you understand the true purpose of useEffect and write better React code.
+
+## useEffect
+
+![React Lifecycle](/thumbnail/goodbye-useEffect/lifecycle.png)
+
+The lifecycle in React is as follows:
+
+`componentDidMount`: Executes when the component is mounted,
+
+`componentDidUpdate`: Executes when the component is updated,
+
+`componentWillUnmount`: Executes when the component is unmounted.
+
+Typically, frontend developers understand and use useEffect aligned with the lifecycle as follows:
+
+```js
+useEffect(() => {
+  // componentDidMount
+}, []);
+
+useEffect(() => {
+  // componentDidUpdate
+}, [deps]);
+
+useEffect(() => {
+  return () => {
+    // componentWillUnmount
+  };
+}, []);
+```
+
+However, this approach obscures the essence of useEffect and becomes a source of unexpected bugs.
+
+For example, it causes unexpected bugs that frontend developers have likely encountered at least once, such as infinite loops or effects running twice in React's Strict Mode.
+
+So what is the real use case for useEffect? David Khourshid emphasizes that useEffect is a hook for **synchronization**.
+
+The official documentation defines useEffect as synchronizing React's state with external systems. Here, 'external systems' refers to everything outside React's control.
+
+## The True Purpose of useEffect: Synchronization
+
+```js
+DOM events: window.addEventListener('scroll', ...)
+
+Timers: setInterval(), setTimeout()
+
+External libraries: Integration with map libraries (Kakao Maps) or chart libraries (D3.js)
+
+Network subscriptions: Chat sockets, Firebase subscriptions, etc.
+```
+
+These tasks require continuous interaction with external systems while the component 'exists', and it's essential to 'disconnect' (clean-up) when the component disappears. This is exactly why useEffect's return statement returns a cleanup function.
+
+```js
+useEffect(() => {
+  // Connect to external system (start subscription)
+  const handler = () => console.log('scrolled!');
+  window.addEventListener('scroll', handler);
+
+  // Disconnect when component disappears (cancel subscription)
+  return () => {
+    window.removeEventListener('scroll', handler);
+  };
+}, []); // The dependency array determines when this synchronization should occur again
+```
+
+## Then Where Do We Handle Tasks? In Event Handlers!
+
+If useEffect's role is synchronization, where should we handle fire-and-forget tasks like API calls? The answer is **event handlers (onClick, onSubmit, etc.)**.
+
+The reason we fetch data is not because the component was **rendered**, but because the user **clicked a button** or **entered the page for the first time**. In other words, the true cause of these side effects lies in user events or actions that must occur at a specific point in time.
+
+The key is to separate roles: useEffect handles synchronization based on state, while event handlers handle one-time tasks based on user actions. To make this role separation clearer, we need to separate the logic that manages state itself from side effects.
+
+This is where the concept of 'pure state management' emerges. By understanding pure functions, we can clearly separate 'state change logic' from 'side effects', which becomes the fundamental criterion for cleanly dividing what useEffect should handle and what event handlers should handle. So what is a pure function?
+
+### Pure Functions
+
+To understand pure state, we must first understand pure functions.
+
+Pure functions follow two simple rules:
+
+**1. Always return the same output for the same input.**
+
+**2. Have no side effects.**
+
+Based on these two rules, pure functions do not change anything external within the function, only receive input, perform calculations, and return new values.
+
+Side effects refer to all behaviors that change external state (e.g., API calls, modifying global variables, console.log output, file saving) or affect external systems.
+
+### Applying This to State Management
+
+Pure state management means making the logic that changes state into these 'pure functions'. The most representative example is the reducer pattern.
+
+It's about making state management logic into a pure formula like this:
+
+**(Current State, Action/Event) => New State**
+
+According to this formula, a function (reducer) that manages state works as follows:
+
+**Input: Receives the current state and an action containing information on how to change the state.**
+
+**Calculation: Based on these two inputs, it only calculates what the 'next state' should be.**
+
+**Output: Returns the calculated 'new state' object.**
+
+### ✅ Pure State Management (Reducer Example)
+
+```js
+// This reducer function is a pure function.
+// 1. If state and action are the same, it always returns the same newState.
+// 2. It has no Side Effects like API calls.
+function counterReducer(state, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      // Instead of directly changing the existing state, it returns a new object.
+      return { ...state, count: state.count + 1 };
+    case 'DECREMENT':
+      return { ...state, count: state.count - 1 };
+    default:
+      return state;
+  }
+}
+
+const initialState = { count: 0 };
+const incrementAction = { type: 'INCREMENT' };
+
+// Execution
+const nextState = counterReducer(initialState, incrementAction); // Returns { count: 1 }
+```
+
+### ❌ Impure State Management
+
+On the other hand, impure approaches refer to cases where state change logic is mixed with other tasks.
+
+```js
+// Impure function (Side Effects are mixed in)
+let count = 0; // External state
+
+function incrementAndLog() {
+  count++; // Directly changes external state (Side Effect!)
+  console.log('Count increased.'); // Affects external (console) (Side Effect!)
+  // Return value is not consistent or absent
+}
+```
+
+Based on this, we can achieve **separation of concerns** without external world intervention.
+
+In other words, we use pure functions to manage state change logic, and handle side effects like network requests clearly in other areas such as event handlers.
+
+This allows useEffect to focus solely on **its original role of synchronizing React state with external systems**.
+
+## References
+
+- [Goodbye, useEffect: David Khourshid](https://www.youtube.com/watch?v=HPoC-k7Rxwo)
+

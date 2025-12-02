@@ -1,11 +1,13 @@
 'use client';
 import React from 'react';
 import { ReactTyped } from 'react-typed';
+import { useTranslations } from 'next-intl';
 
 const IntroMessage = () => {
+  const t = useTranslations('Introduce');
   return (
     <div className='text-3xl'>
-      <p> 안녕하세요!</p>
+      <p> {t('hello')}</p>
       <span>
         <ReactTyped
           strings={['FrontEnd', 'Typescript', 'Hamster']}
@@ -14,20 +16,20 @@ const IntroMessage = () => {
           loop={true}
           className='font-bold'
         />
-        를 좋아하는
+        {t('like')}
       </span>
       <br />
       <span>
-        개발자
+        {t('developer')}
         <ReactTyped
-          strings={['남정욱', 'HelloWook']}
+          strings={[t('name'), 'HelloWook']}
           typeSpeed={60}
           backSpeed={80}
           loop={true}
           className='font-bold'
         />
       </span>
-      입니다.
+      {t('dot')}
     </div>
   );
 };

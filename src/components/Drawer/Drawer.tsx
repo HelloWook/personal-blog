@@ -1,10 +1,12 @@
 'use client';
 import { useDrawerStore } from '@/hooks/useDrawerStore';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { drawerStore } from './DrawerStore';
+import {useTranslations} from 'next-intl';
 
 const Drawer = () => {
   const isOpen = useDrawerStore();
+  const t = useTranslations('Navigation');
 
   const closeDrawer = () => {
     drawerStore.set(false);
@@ -18,13 +20,13 @@ const Drawer = () => {
         <label htmlFor='my-drawer-4' aria-label='close sidebar' className='drawer-overlay'></label>
         <ul className='min-h-full p-4 menu bg-base-200 text-base-content w-80' onClick={closeDrawer}>
           <li>
-            <Link href={'/posts'}>Posts</Link>
+            <Link href={'/posts'}>{t('posts')}</Link>
           </li>
           <li>
-            <Link href={'/abouts'}>Abouts</Link>
+            <Link href={'/abouts'}>{t('abouts')}</Link>
           </li>
           <li>
-            <Link href={'/projects'}>Projects</Link>
+            <Link href={'/projects'}>{t('projects')}</Link>
           </li>
         </ul>
       </div>

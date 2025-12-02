@@ -15,11 +15,15 @@ const mockMatter = matter as jest.MockedFunction<typeof matter>;
 describe('MDX 파싱 유틸리티', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // fs.existsSync를 명시적으로 모킹
+    (mockFs.existsSync as jest.Mock) = jest.fn();
   });
 
   it('MDX 파일을 올바르게 파싱해야 한다', () => {
     const fileName = 'test-post';
-    const mockFilePath = '/path/to/contents/posts/test-post/index.mdx';
+    const locale = 'ko';
+    const mockLocaleFilePath = '/path/to/contents/posts/test-post/index.ko.mdx';
+    const mockDefaultFilePath = '/path/to/contents/posts/test-post/index.mdx';
     const mockFileContent = `---
 title: Test Post
 date: 2024-01-01
@@ -42,14 +46,20 @@ This is the content of the test post.`;
       language: 'markdown',
     };
 
-    mockBuildPath.mockReturnValue(mockFilePath);
+    mockBuildPath
+      .mockReturnValueOnce(mockLocaleFilePath)
+      .mockReturnValueOnce(mockDefaultFilePath);
+    mockFs.existsSync
+      .mockReturnValueOnce(false) // locale 파일이 없으면
+      .mockReturnValueOnce(true); // default 파일이 있으면
     mockFs.readFileSync.mockReturnValue(mockFileContent);
     mockMatter.mockReturnValue(mockParsedData as any);
 
-    const result = parseMDX(fileName);
+    const result = parseMDX(fileName, locale);
 
+    expect(mockBuildPath).toHaveBeenCalledWith(`contents/posts/${fileName}/index.${locale}.mdx`);
     expect(mockBuildPath).toHaveBeenCalledWith(`contents/posts/${fileName}/index.mdx`);
-    expect(mockFs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
+    expect(mockFs.readFileSync).toHaveBeenCalledWith(mockDefaultFilePath, 'utf-8');
     expect(mockMatter).toHaveBeenCalledWith(mockFileContent);
     expect(result).toEqual({
       mdxContent: mockParsedData.content,
@@ -60,7 +70,9 @@ This is the content of the test post.`;
 
   it('복잡한 메타데이터가 있는 MDX 파일을 파싱해야 한다', () => {
     const fileName = 'complex-post';
-    const mockFilePath = '/path/to/contents/posts/complex-post/index.mdx';
+    const locale = 'ko';
+    const mockLocaleFilePath = '/path/to/contents/posts/complex-post/index.ko.mdx';
+    const mockDefaultFilePath = '/path/to/contents/posts/complex-post/index.mdx';
     const mockFileContent = `---
 title: Complex Post
 date: 2024-01-01
@@ -91,11 +103,14 @@ This is a complex post with many features and metadata.`;
       language: 'markdown',
     };
 
-    mockBuildPath.mockReturnValue(mockFilePath);
+    mockBuildPath
+      .mockReturnValueOnce(mockLocaleFilePath)
+      .mockReturnValueOnce(mockDefaultFilePath);
+    mockFs.existsSync.mockReturnValueOnce(false).mockReturnValueOnce(true);
     mockFs.readFileSync.mockReturnValue(mockFileContent);
     mockMatter.mockReturnValue(mockParsedData as any);
 
-    const result = parseMDX(fileName);
+    const result = parseMDX(fileName, locale);
 
     expect(result.mdxContent).toBe(mockParsedData.content);
     expect(result.data).toEqual(mockParsedData.data);
@@ -104,7 +119,9 @@ This is a complex post with many features and metadata.`;
 
   it('메타데이터가 없는 MDX 파일을 파싱해야 한다', () => {
     const fileName = 'no-metadata-post';
-    const mockFilePath = '/path/to/contents/posts/no-metadata-post/index.mdx';
+    const locale = 'ko';
+    const mockLocaleFilePath = '/path/to/contents/posts/no-metadata-post/index.ko.mdx';
+    const mockDefaultFilePath = '/path/to/contents/posts/no-metadata-post/index.mdx';
     const mockFileContent = `# No Metadata Post
 
 This post has no frontmatter metadata.`;
@@ -115,11 +132,14 @@ This post has no frontmatter metadata.`;
       language: 'markdown',
     };
 
-    mockBuildPath.mockReturnValue(mockFilePath);
+    mockBuildPath
+      .mockReturnValueOnce(mockLocaleFilePath)
+      .mockReturnValueOnce(mockDefaultFilePath);
+    mockFs.existsSync.mockReturnValueOnce(false).mockReturnValueOnce(true);
     mockFs.readFileSync.mockReturnValue(mockFileContent);
     mockMatter.mockReturnValue(mockParsedData as any);
 
-    const result = parseMDX(fileName);
+    const result = parseMDX(fileName, locale);
 
     expect(result.mdxContent).toBe(mockParsedData.content);
     expect(result.data).toEqual({});
@@ -128,7 +148,9 @@ This post has no frontmatter metadata.`;
 
   it('올바른 파일 경로를 생성해야 한다', () => {
     const fileName = 'path-test';
-    const mockFilePath = '/correct/path/to/contents/posts/path-test/index.mdx';
+    const locale = 'ko';
+    const mockLocaleFilePath = '/correct/path/to/contents/posts/path-test/index.ko.mdx';
+    const mockDefaultFilePath = '/correct/path/to/contents/posts/path-test/index.mdx';
     const mockFileContent = '# Test';
     const mockParsedData = {
       content: '# Test',
@@ -136,18 +158,24 @@ This post has no frontmatter metadata.`;
       language: 'markdown',
     };
 
-    mockBuildPath.mockReturnValue(mockFilePath);
+    mockBuildPath
+      .mockReturnValueOnce(mockLocaleFilePath)
+      .mockReturnValueOnce(mockDefaultFilePath);
+    mockFs.existsSync.mockReturnValueOnce(false).mockReturnValueOnce(true);
     mockFs.readFileSync.mockReturnValue(mockFileContent);
     mockMatter.mockReturnValue(mockParsedData as any);
 
-    parseMDX(fileName);
+    parseMDX(fileName, locale);
 
+    expect(mockBuildPath).toHaveBeenCalledWith(`contents/posts/${fileName}/index.${locale}.mdx`);
     expect(mockBuildPath).toHaveBeenCalledWith(`contents/posts/${fileName}/index.mdx`);
   });
 
   it('파일 읽기 시 올바른 인코딩을 사용해야 한다', () => {
     const fileName = 'encoding-test';
-    const mockFilePath = '/path/to/contents/posts/encoding-test/index.mdx';
+    const locale = 'ko';
+    const mockLocaleFilePath = '/path/to/contents/posts/encoding-test/index.ko.mdx';
+    const mockDefaultFilePath = '/path/to/contents/posts/encoding-test/index.mdx';
     const mockFileContent = '# Test';
     const mockParsedData = {
       content: '# Test',
@@ -155,12 +183,15 @@ This post has no frontmatter metadata.`;
       language: 'markdown',
     };
 
-    mockBuildPath.mockReturnValue(mockFilePath);
+    mockBuildPath
+      .mockReturnValueOnce(mockLocaleFilePath)
+      .mockReturnValueOnce(mockDefaultFilePath);
+    mockFs.existsSync.mockReturnValueOnce(false).mockReturnValueOnce(true);
     mockFs.readFileSync.mockReturnValue(mockFileContent);
     mockMatter.mockReturnValue(mockParsedData as any);
 
-    parseMDX(fileName);
+    parseMDX(fileName, locale);
 
-    expect(mockFs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
+    expect(mockFs.readFileSync).toHaveBeenCalledWith(mockDefaultFilePath, 'utf-8');
   });
 });
