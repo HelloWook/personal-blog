@@ -23,7 +23,7 @@ jest.mock('../LanguageSelector/LanguageSelector', () => {
 });
 
 jest.mock('next-intl/server', () => ({
-  getTranslations: jest.fn(async (namespace?: string) => {
+  getTranslations: jest.fn(async () => {
     return (key: string) => {
       const keys: Record<string, string> = {
         'posts': '포스트',
