@@ -62,17 +62,17 @@ describe('Header', () => {
     // Posts 링크 확인
     const postsLink = screen.getByText('포스트');
     expect(postsLink).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '포스트' })).toHaveAttribute('href', '/posts');
+    expect(screen.getByRole('link', { name: '포스트' })).toHaveAttribute('href', '/ko/posts');
 
     // Abouts 링크 확인
     const aboutsLink = screen.getByText('소개');
     expect(aboutsLink).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '소개' })).toHaveAttribute('href', '/abouts');
+    expect(screen.getByRole('link', { name: '소개' })).toHaveAttribute('href', '/ko/abouts');
 
     // Projects 링크 확인
     const projectsLink = screen.getByText('프로젝트');
     expect(projectsLink).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '프로젝트' })).toHaveAttribute('href', '/projects');
+    expect(screen.getByRole('link', { name: '프로젝트' })).toHaveAttribute('href', '/ko/projects');
   });
 
   it('메인 로고가 홈으로 연결된다', async () => {
@@ -81,6 +81,6 @@ describe('Header', () => {
         {await Header()}
       </NextIntlClientProvider>
     );
-    expect(screen.getByRole('link', { name: 'HelloWook.life' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'HelloWook.life' })).toHaveAttribute('href', '/ko');
   });
 });
