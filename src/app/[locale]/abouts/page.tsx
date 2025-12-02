@@ -3,12 +3,14 @@ import TimeLine from '@/components/TimeLine/TimeLine';
 import React from 'react';
 import { Activities } from '@/datas/activity';
 import SubTitle from '@/components/SubTitle/SubTitle';
+import {getTranslations} from 'next-intl/server';
 
-const About = () => {
+const About = async () => {
+  const t = await getTranslations('AboutsPage');
   return (
     <div className='w-full'>
       <Introduce />
-      <SubTitle title='나의 지난 날들' description='저의 발자취 입니다.' />
+      <SubTitle title={t('title')} description={t('description')} />
       <TimeLine activities={Activities} />
     </div>
   );

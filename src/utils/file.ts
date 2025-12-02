@@ -23,6 +23,17 @@ interface ParsedPost extends Post {
 const POSTS_DIRECTORY = 'contents/posts';
 const MDX_FILE_NAME = 'index.mdx';
 
+// Helper function to get MDX file path with locale fallback
+const getMdxFilePath = (directory: string, fileName: string, locale: string = 'ko'): string => {
+  const localeFilePath = buildPath(directory, fileName, `index.${locale}.mdx`);
+  const defaultFilePath = buildPath(directory, fileName, MDX_FILE_NAME);
+  
+  if (fs.existsSync(localeFilePath)) {
+    return localeFilePath;
+  }
+  return defaultFilePath;
+};
+
 // Utility functions
 export const buildPath = (...segments: string[]): string => {
   return path.join(process.cwd(), ...segments);
@@ -69,6 +80,11 @@ export const parseMdxFile = (filePath: string): { data: PostMetadata; content: s
   }
 };
 
+export const parseMdxFileWithLocale = (directory: string, fileName: string, locale: string = 'ko'): { data: PostMetadata; content: string } => {
+  const filePath = getMdxFilePath(directory, fileName, locale);
+  return parseMdxFile(filePath);
+};
+
 export const createPostFromMetadata = (metadata: PostMetadata, content: string, fileName: string): ParsedPost => {
   return {
     title: metadata.title,
@@ -84,14 +100,13 @@ export const createPostFromMetadata = (metadata: PostMetadata, content: string, 
 };
 
 // Main functions
-export const getAllPosts = (directory: string = POSTS_DIRECTORY): Post[] => {
+export const getAllPosts = (directory: string = POSTS_DIRECTORY, locale: string = 'ko'): Post[] => {
   const files = readDirectory(directory);
 
   return files
     .map((file) => {
       try {
-        const filePath = buildPath(directory, file, MDX_FILE_NAME);
-        const { data, content } = parseMdxFile(filePath);
+        const { data, content } = parseMdxFileWithLocale(directory, file, locale);
         return createPostFromMetadata(data, content, file);
       } catch (error) {
         console.error(`${file}`, error);
@@ -101,24 +116,25 @@ export const getAllPosts = (directory: string = POSTS_DIRECTORY): Post[] => {
     .filter((post): post is ParsedPost => post !== null);
 };
 
-export const getPostByFileName = (fileName: string, directory: string = POSTS_DIRECTORY): Post => {
-  const filePath = buildPath(directory, fileName, MDX_FILE_NAME);
-  const { data, content } = parseMdxFile(filePath);
+export const getPostByFileName = (fileName: string, directory: string = POSTS_DIRECTORY, locale: string = 'ko'): Post => {
+  const { data, content } = parseMdxFileWithLocale(directory, fileName, locale);
   return createPostFromMetadata(data, content, fileName);
 };
 
 export const getAllPostFileNames = (directory: string = POSTS_DIRECTORY): string[] => {
-  const posts = getAllPosts(directory);
-  return Array.from(new Set(posts.map((post) => post.fileName))).sort();
+  // Get file names from directory structure, not from parsed posts
+  // This ensures we get all posts regardless of locale
+  const files = readDirectory(directory);
+  return files.sort();
 };
 
-export const getAllSeries = (directory: string = POSTS_DIRECTORY): string[] => {
-  const posts = getAllPosts(directory);
+export const getAllSeries = (directory: string = POSTS_DIRECTORY, locale: string = 'ko'): string[] => {
+  const posts = getAllPosts(directory, locale);
   return Array.from(new Set(posts.map((post) => post.series).filter(Boolean))).sort();
 };
 
-export const getPostsWithBlurData = async (directory: string = POSTS_DIRECTORY): Promise<PostWithBlur[]> => {
-  const posts = getAllPosts(directory);
+export const getPostsWithBlurData = async (directory: string = POSTS_DIRECTORY, locale: string = 'ko'): Promise<PostWithBlur[]> => {
+  const posts = getAllPosts(directory, locale);
 
   return Promise.all(
     posts.map(async (post) => ({

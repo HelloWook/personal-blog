@@ -3,8 +3,10 @@ import Link from 'next/link';
 import DrawButton from '../Drawer/DrawButton';
 import ThemeContainer from '../ThemeToggle/ThemeContainer';
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
+import {getTranslations} from 'next-intl/server';
 
-const Header = () => {
+const Header = async () => {
+  const t = await getTranslations('Navigation');
   return (
     <header className='flex items-center w-full py-4 mb-4'>
       <Link className='justify-center flex-1 text-xl' href={'/'}>
@@ -12,13 +14,13 @@ const Header = () => {
       </Link>
       <div className='items-center hidden gap-7 sm:flex'>
         <Link href={'/posts'} className='underline-animation'>
-          Posts
+          {t('posts')}
         </Link>
         <Link href={'/abouts'} className='underline-animation'>
-          Abouts
+          {t('abouts')}
         </Link>
         <Link href={'/projects'} className='underline-animation'>
-          Projects
+          {t('projects')}
         </Link>
         <div>
         <ThemeContainer />

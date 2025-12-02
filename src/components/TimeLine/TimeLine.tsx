@@ -1,11 +1,13 @@
 import React from 'react';
 import { Activity } from '@/datas/activity';
+import {getTranslations} from 'next-intl/server';
 
 interface TimeLineProps {
   activities: Activity[];
 }
 
-const TimeLine = ({ activities }: TimeLineProps) => {
+const TimeLine = async ({ activities }: TimeLineProps) => {
+  const t = await getTranslations();
   return (
     <ul className='timeline timeline-snap-icon max-md:timeline-compact timeline-vertical'>
       {activities.map((activitie, idx) => {
@@ -16,9 +18,9 @@ const TimeLine = ({ activities }: TimeLineProps) => {
             </div>
             <div className={`${idx % 2 === 0 ? 'mb-10 timeline-start md:text-end ' : ' timeline-end md:mb-10'}`}>
               <time className='font-mono italic'>{activitie.date}</time>
-              <div className='text-lg font-black'>{activitie.title}</div>
-              <p data-testid={`social-link-${activitie.title}`} className='text-start'>
-                {activitie.description}
+              <div className='text-lg font-black'>{t(activitie.titleKey)}</div>
+              <p data-testid={`social-link-${activitie.titleKey}`} className='text-start'>
+                {t(activitie.descriptionKey)}
               </p>
             </div>
             <hr />

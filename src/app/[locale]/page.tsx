@@ -2,11 +2,12 @@ import Introduce from '@/components/Introduce/Introduce';
 import PostCard from '@/components/Post/PostCard/PostCard';
 import { getPostsWithBlurData } from '@/utils/file';
 import SubTitle from '@/components/SubTitle/SubTitle';
-import {getTranslations} from 'next-intl/server';
+import {getTranslations, getLocale} from 'next-intl/server';
 
 export default async function Home() {
+  const locale = await getLocale();
   const t = await getTranslations('HomePage');
-  const posts = await getPostsWithBlurData();
+  const posts = await getPostsWithBlurData(undefined, locale);
 
   return (
     <>
