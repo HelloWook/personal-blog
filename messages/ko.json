@@ -1,0 +1,13 @@
+{
+    "Introduce": {
+        "hello": "안녕하세요!",
+        "like": "를 좋아하는",
+        "developer": "개발자",
+        "name": "남정욱",
+        "dot": "입니다."
+    },
+    "HomePage": {
+      "recentPosts": "최근 포스트",
+      "description": "개발과 관련된 다양한 주제들을 다룹니다"
+    }
+}

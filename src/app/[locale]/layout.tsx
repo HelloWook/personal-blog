@@ -1,9 +1,10 @@
 import Footer from '@/components/Footer/Footer';
-import suite from '../utils/suite';
-import '../styles/global.css';
+import suite from '../../utils/suite';
+import '../../styles/global.css';
 import Header from '@/components/Header/Header';
 import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
+import {NextIntlClientProvider} from 'next-intl';
 
 export const metadata: Metadata = {
   title: {
@@ -106,12 +107,14 @@ export default async function RootLayouta({
         />
       </head>
       <body>
+        <NextIntlClientProvider>
         <Drawer />
         <div className='max-w-[900px] w-[90%] min-h-screen m-auto'>
           <Header />
-          {children}
-        </div>
-        <Footer />
+            {children}
+          </div>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

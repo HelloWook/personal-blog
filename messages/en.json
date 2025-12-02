@@ -1,0 +1,13 @@
+{
+    "Introduce": {
+      "hello": "Hello!",
+      "like": "Lover",
+      "developer": "Developer",
+      "name": "Jungwook Nam",
+      "dot": "."
+    },
+    "HomePage": {
+      "recentPosts": "Recent Posts",
+      "description": "Share various topics related to development"
+    }
+  }

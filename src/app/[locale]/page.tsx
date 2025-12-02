@@ -2,14 +2,16 @@ import Introduce from '@/components/Introduce/Introduce';
 import PostCard from '@/components/Post/PostCard/PostCard';
 import { getPostsWithBlurData } from '@/utils/file';
 import SubTitle from '@/components/SubTitle/SubTitle';
+import {getTranslations} from 'next-intl/server';
 
 export default async function Home() {
+  const t = await getTranslations('HomePage');
   const posts = await getPostsWithBlurData();
 
   return (
     <>
       <Introduce />
-      <SubTitle title='최근 포스트' description='개발과 관련된 다양한 주제들을 다룹니다' />
+      <SubTitle title={t('recentPosts')} description={t('description')} />
       <div className='flex flex-col gap-6'>
         {posts
           .slice(0, 4)
