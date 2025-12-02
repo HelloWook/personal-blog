@@ -1,0 +1,68 @@
+---
+title: 'Blog Stack Selector'
+excerpt: 'I share the blog development stack I personally chose and the reasons behind it.'
+date: '2025-09-09'
+thumbnail: '/thumbnail/blog-select-stack/index.png'
+tags:
+  - Frontend
+slug: blog-select-stack
+series: Blog
+---
+
+# Blog Stack Selector
+
+### Next.js
+
+When choosing a framework, the first things I considered were **rendering strategy and ecosystem**. React alone is primarily focused on **CSR (Client Side Rendering)**, which left much to be desired in terms of SEO and initial loading speed.
+
+Next.js natively supports **SSG (Static Site Generation)** and **SSR (Server Side Rendering)**, allowing you to choose the appropriate rendering method based on the page's characteristics.
+
+Static pages are generated at build time for fast display, while pages with frequently changing data use **SSR for real-time updates**. This combination was well-suited for projects like blogs with static pages.
+
+### TailwindCSS
+
+For styling, Tailwind was the obvious choice without any hesitation.
+
+```text
+1. Utility class-based approach enables rapid UI creation
+2. No need to manage separate CSS files
+3. Most importantly, it's the CSS framework I'm most familiar with, and it works well with DaisyUI
+```
+
+The ability to quickly create prototypes before establishing a design system was a major advantage.
+
+### DaisyUI
+
+Using Tailwind alone would require building components like buttons or modals from scratch.
+
+DaisyUI fills this gap as a UI library that naturally complements Tailwind.
+
+```text
+1. Basic components can be used immediately with Tailwind styles
+2. Strong theme support makes dark mode and custom theme switching easy
+3. 100% compatible with Tailwind → almost no learning curve
+```
+
+Of course, alternatives like shadcn/ui were also available. shadcn is based on Radix, offering excellent accessibility, and its structure of bringing components directly into your code for management makes it strong for customization. However, for this project, **fast development speed** and **moderate design consistency** were priorities.
+
+DaisyUI allows you to use themes and components immediately after installation, making it optimal for the initial development phase.
+
+## MDX
+
+### Limitations of Markdown Alone
+
+Blog posts are typically written in Markdown. While simple and intuitive, there were limitations when wanting to insert custom components or reuse UI.
+
+### Advantages of MDX
+
+That's why I chose **MDX**.  
+MDX is a combination of **Markdown + JSX**, allowing you to import React components while writing content.
+
+This enabled the following advantages:
+
+```text
+1. Free component insertion → naturally add buttons, charts, notification boxes, etc. within posts
+2. UI reuse → componentize and reuse the same layouts and styles
+3. Plugin extensibility → extend functionality like code block highlighting or image optimization by attaching remark, rehype, etc.
+```
+
