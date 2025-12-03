@@ -83,7 +83,6 @@ export default async function RootLayouta({
             }
             (function(){
                   const t = getCookie('theme') ;
-                  console.log('Initial theme:', t);
                     var theme = t === 'synthwave' ? 'synthwave' : 'pastel';
                     var el = document.documentElement;
                     el.setAttribute('data-theme', theme);
