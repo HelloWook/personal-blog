@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 @plugin "daisyui" {
+  themes: synthwave, pastel --default;
 }
 @plugin "daisyui/theme" {
   name: 'synthwave';
