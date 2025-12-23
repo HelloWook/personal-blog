@@ -32,4 +32,19 @@ export const Activities: Activity[] = [
     titleKey: 'activity.6.title',
     descriptionKey: 'activity.6.description',
   },
+  {
+    date: '2025-09-01',
+    titleKey: 'activity.7.title',
+    descriptionKey: 'activity.7.description',
+  },
+  {
+    date: '2025-12-22',
+    titleKey: 'activity.8.title',
+    descriptionKey: 'activity.8.description',
+  },
+  {
+    date: '2026-01-05',
+    titleKey: 'activity.9.title',
+    descriptionKey: 'activity.9.description',
+  },
 ];

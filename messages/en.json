@@ -1,94 +1,106 @@
 {
-    "Introduce": {
-      "hello": "Hello!",
-      "like": "Lover",
-      "developer": "Developer",
-      "name": "Jungwook Nam",
-      "dot": "."
+  "Introduce": {
+    "hello": "Hello!",
+    "like": "Lover",
+    "developer": "Developer",
+    "name": "Jungwook Nam",
+    "dot": "."
+  },
+  "HomePage": {
+    "recentPosts": "Recent Posts",
+    "description": "Share various topics related to development"
+  },
+  "Navigation": {
+    "posts": "Posts",
+    "abouts": "Abouts",
+    "projects": "Projects"
+  },
+  "PostPage": {
+    "loading": "Loading...",
+    "all": "All",
+    "posts": "Posts",
+    "allPosts": "All Posts",
+    "seriesPosts": "{series} Posts",
+    "postCount": "{count} Posts"
+  },
+  "ProjectsPage": {
+    "title": "Project List",
+    "description": "List of projects I have participated in."
+  },
+  "AboutsPage": {
+    "title": "My Past Days",
+    "description": "This is my footprint."
+  },
+  "ProjectCard": {
+    "inDevelopment": "In Development",
+    "inOperation": "In Operation",
+    "operationEnded": "Operation Ended",
+    "tempData": "Temporary Data"
+  },
+  "Footer": {
+    "copyright": "Copyright © {year} - All right reserved by"
+  },
+  "activity": {
+    "0": {
+      "title": "Enrolled in Computer Engineering at Dong-Eui University",
+      "description": ""
     },
-    "HomePage": {
-      "recentPosts": "Recent Posts",
-      "description": "Share various topics related to development"
+    "1": {
+      "title": "Enlisted in Military Service",
+      "description": "Served as an operations soldier, performing administrative tasks using Hangul and Excel"
     },
-    "Navigation": {
-      "posts": "Posts",
-      "abouts": "Abouts",
-      "projects": "Projects"
+    "2": {
+      "title": "Discharged from Military Service",
+      "description": "Completed service as Sergeant (E-5)"
     },
-    "PostPage": {
-      "loading": "Loading...",
-      "all": "All",
-      "posts": "Posts",
-      "allPosts": "All Posts",
-      "seriesPosts": "{series} Posts",
-      "postCount": "{count} Posts"
+    "3": {
+      "title": "Completed Open Source Contributor Program",
+      "description": "Participated in Ant Design System translation work"
     },
-    "ProjectsPage": {
-      "title": "Project List",
-      "description": "List of projects I have participated in."
+    "4": {
+      "title": "Completed Programmers DevCourse Frontend (Major Track)",
+      "description": ""
     },
-    "AboutsPage": {
-      "title": "My Past Days",
-      "description": "This is my footprint."
+    "5": {
+      "title": "Graduated from Computer Engineering at Dong-Eui University",
+      "description": ""
     },
-    "ProjectCard": {
-      "inDevelopment": "In Development",
-      "inOperation": "In Operation",
-      "operationEnded": "Operation Ended",
-      "tempData": "Temporary Data"
+    "6": {
+      "title": "Completed Codeit Short-term Intensive Course",
+      "description": ""
     },
-    "Footer": {
-      "copyright": "Copyright © {year} - All right reserved by"
+    "7": {
+      "title": "First Company Employment",
+      "description": "Frontend Developer"
     },
-    "activity": {
-      "0": {
-        "title": "Enrolled in Computer Engineering at Dong-Eui University",
-        "description": ""
-      },
-      "1": {
-        "title": "Enlisted in Military Service",
-        "description": "Served as an operations soldier, performing administrative tasks using Hangul and Excel"
-      },
-      "2": {
-        "title": "Discharged from Military Service",
-        "description": "Completed service as Sergeant (E-5)"
-      },
-      "3": {
-        "title": "Completed Open Source Contributor Program",
-        "description": "Participated in Ant Design System translation work"
-      },
-      "4": {
-        "title": "Completed Programmers DevCourse Frontend (Major Track)",
-        "description": ""
-      },
-      "5": {
-        "title": "Graduated from Computer Engineering at Dong-Eui University",
-        "description": ""
-      },
-      "6": {
-        "title": "Completed Codeit Short-term Intensive Course",
-        "description": ""
-      }
+    "8": {
+      "title": "First Company Resignation",
+      "description": ""
     },
-    "project": {
-      "0": {
-        "description": "My Growth Journey"
-      },
-      "1": {
-        "description": "Anonymous Letters to the Sea"
-      },
-      "2": {
-        "description": "Emotion Recording Diary"
-      },
-      "3": {
-        "description": "Smart Schedule Management"
-      },
-      "4": {
-        "description": "Conversational Todo List"
-      }
-    },
-    "role": {
-      "frontend": "Frontend",
-      "fullStack": "Full Stack"
+    "9": {
+      "title": "Second Company Employment",
+      "description": "Frontend Developer"
     }
+  },
+  "project": {
+    "0": {
+      "description": "My Growth Journey"
+    },
+    "1": {
+      "description": "Anonymous Letters to the Sea"
+    },
+    "2": {
+      "description": "Emotion Recording Diary"
+    },
+    "3": {
+      "description": "Smart Schedule Management"
+    },
+    "4": {
+      "description": "Conversational Todo List"
+    }
+  },
+  "role": {
+    "frontend": "Frontend",
+    "fullStack": "Full Stack"
   }
+}
