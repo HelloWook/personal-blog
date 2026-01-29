@@ -2,7 +2,6 @@ import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
@@ -12,6 +11,14 @@ const nextConfig: NextConfig = {
   },
   outputFileTracingIncludes: {
     '/': ['./contents/posts/**/*'],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=60, stale-while-revalidate=31536000' }],
+      },
+    ];
   },
 };
 
