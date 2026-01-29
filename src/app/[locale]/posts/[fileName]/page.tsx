@@ -4,16 +4,16 @@ import { Metadata } from 'next';
 import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
 
+export const revalidate = 36000;
+
 interface PostDetailPageProps {
   params: Promise<{ locale: string; fileName: string }>;
 }
 export async function generateStaticParams() {
   const fileNames = await getAllPostFileNames();
   const locales = ['ko', 'en'];
-  
-  return locales.flatMap((locale) =>
-    fileNames.map((fileName) => ({ locale, fileName }))
-  );
+
+  return locales.flatMap((locale) => fileNames.map((fileName) => ({ locale, fileName })));
 }
 
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
