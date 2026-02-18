@@ -3,7 +3,10 @@ import TimeLine from '@/components/TimeLine/TimeLine';
 import React from 'react';
 import { Activities } from '@/datas/activity';
 import SubTitle from '@/components/SubTitle/SubTitle';
-import {getTranslations} from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { getStaticLocaleParams } from '@/utils/staticParams';
+
+export const generateStaticParams = getStaticLocaleParams;
 
 const About = async () => {
   const t = await getTranslations('AboutsPage');

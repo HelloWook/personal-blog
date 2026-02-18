@@ -4,7 +4,8 @@ import '@/styles/global.css';
 import Header from '@/components/Header/Header';
 import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
-import {NextIntlClientProvider} from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: {
@@ -106,14 +107,16 @@ export default async function RootLayouta({
         />
       </head>
       <body>
-        <NextIntlClientProvider>
-        <Drawer />
-        <div className='max-w-[900px] w-[90%] min-h-screen m-auto'>
-          <Header />
-            {children}
-          </div>
-          <Footer />
-        </NextIntlClientProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <NextIntlClientProvider>
+            <Drawer />
+            <div className='max-w-[900px] w-[90%] min-h-screen m-auto'>
+              <Header />
+              {children}
+            </div>
+            <Footer />
+          </NextIntlClientProvider>
+        </Suspense>
       </body>
     </html>
   );

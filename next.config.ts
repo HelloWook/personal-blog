@@ -6,9 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
-  eslint: {
-    dirs: ['src'],
-  },
+  cacheComponents: true,
   outputFileTracingIncludes: {
     '/': ['./contents/posts/**/*'],
   },

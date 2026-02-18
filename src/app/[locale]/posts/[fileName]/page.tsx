@@ -1,19 +1,17 @@
 import { getAllPostFileNames } from '@/utils/file';
-
 import { Metadata } from 'next';
 import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
-
-export const revalidate = 36000;
+import { routing } from '@/i18n/routing';
+import { cacheLife } from 'next/cache';
 
 interface PostDetailPageProps {
   params: Promise<{ locale: string; fileName: string }>;
 }
+
 export async function generateStaticParams() {
   const fileNames = await getAllPostFileNames();
-  const locales = ['ko', 'en'];
-
-  return locales.flatMap((locale) => fileNames.map((fileName) => ({ locale, fileName })));
+  return routing.locales.flatMap((locale) => fileNames.map((fileName) => ({ locale, fileName })));
 }
 
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
@@ -45,8 +43,10 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
   };
 }
 
-export default async function PostDetailPage({ params }: PostDetailPageProps) {
-  const { fileName, locale } = await params;
+async function CachedPostContent({ fileName, locale }: { fileName: string; locale: string }) {
+  'use cache';
+  cacheLife('max');
+
   const { mdxContent, data } = parseMdx(fileName, locale);
 
   return (
@@ -80,4 +80,10 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
       <PostDetail mdxContent={mdxContent} />
     </>
   );
+}
+
+export default async function PostDetailPage({ params }: PostDetailPageProps) {
+  const { fileName, locale } = await params;
+
+  return <CachedPostContent fileName={fileName} locale={locale} />;
 }
