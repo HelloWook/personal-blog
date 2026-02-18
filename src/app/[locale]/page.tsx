@@ -3,6 +3,9 @@ import PostCard from '@/components/Post/PostCard/PostCard';
 import { getPostsWithBlurData } from '@/utils/file';
 import SubTitle from '@/components/SubTitle/SubTitle';
 import {getTranslations, getLocale} from 'next-intl/server';
+import {getStaticLocaleParams} from '@/utils/staticParams';
+
+export const generateStaticParams = getStaticLocaleParams;
 
 export default async function Home() {
   const locale = await getLocale();

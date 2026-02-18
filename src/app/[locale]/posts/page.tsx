@@ -2,6 +2,9 @@ import PostSeries from '@/components/Post/PostSeries/PostSeries';
 import { getPostsWithBlurData, getAllSeries } from '@/utils/file';
 import { Suspense } from 'react';
 import {getTranslations, getLocale} from 'next-intl/server';
+import {getStaticLocaleParams} from '@/utils/staticParams';
+
+export const generateStaticParams = getStaticLocaleParams;
 
 const PostPage = async () => {
   const locale = await getLocale();
