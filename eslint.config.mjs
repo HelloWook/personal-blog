@@ -4,6 +4,7 @@ import testingLibraryPlugin from 'eslint-plugin-testing-library';
 import nextPlugin from '@next/eslint-plugin-next';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
+import unusedImports from 'eslint-plugin-unused-imports';
 
 const eslintConfig = [
   {
@@ -25,10 +26,14 @@ const eslintConfig = [
     plugins: {
       '@typescript-eslint': tseslint,
       '@next/next': nextPlugin,
+      'unused-imports': unusedImports,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
+      'unused-imports/no-unused-imports': 'error',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unused-imports/no-unused-vars': ['warn', { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' }],
     },
   },
 
