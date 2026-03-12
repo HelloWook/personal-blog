@@ -41,12 +41,12 @@ const PostDetail = ({ mdxContent }: PostDetailProps) => {
             img: async (props) => {
               const blurDataURL = await getBlurLocalImg(props.src);
               return (
-                <h2 className='relative w-full my-6 h-100'>
+                <h2 className='relative w-full my-6'>
                   <Image
                     {...props}
                     alt={props.alt ?? '커버 이미지'}
                     fill
-                    className='object-cover rounded-xl'
+                    className='contain rounded-xl'
                     blurDataURL={blurDataURL}
                     placeholder='blur'
                   />

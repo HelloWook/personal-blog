@@ -113,7 +113,8 @@ export const getAllPosts = (directory: string = POSTS_DIRECTORY, locale: string 
         return null;
       }
     })
-    .filter((post): post is ParsedPost => post !== null);
+    .filter((post): post is ParsedPost => post !== null)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
 export const getPostByFileName = (fileName: string, directory: string = POSTS_DIRECTORY, locale: string = 'ko'): Post => {
