@@ -1,0 +1,272 @@
+---
+title: '좋은 모달(다이로그) 구현법은 무엇인가'
+excerpt: '좋은 모달(다이로그) 구현법은 무엇인가를 고민하는 글입니다.'
+date: '2026-03-12'
+thumbnail: '/thumbnail/good-dialog/index.png'
+tags:
+  - Article
+  - Design System
+  - Modal
+slug: good-dialog
+series: Article
+---
+
+# 좋은 모달(다이로그) 구현법은 무엇인가
+
+## 모달(다이로그)란 무엇인가
+
+안녕하세요 뉴비 프론트엔드 개발자 남정욱입니다.
+
+이번 포스트에선 좋은 (모달) 구현 방식에 대해 고민한 과정을 공유하고자 합니다.
+
+모달(다이로그)란 사용자에게 정보를 제공하거나 입력을 요청하는 창을 말합니다.
+
+![모달(다이로그) 예시](/thumbnail/good-dialog/exp.gif)
+
+아마 다이로그나, 모달의 명칭은 잘 모르셔도 위와 같은 컴포넌트 예시는 누구나 한 번쯤은 보셨을 겁니다.
+
+이처럼 다이로그나 모달은 웹 사이트 전반에서 자주 사용되는 컴포넌트이지만 개발자 입장에선 매우 복잡한 구현이 필요한 컴포넌트입니다.
+
+## 다이어로그 코드 지옥
+
+### Z-index 지옥과 DOM 계층 문제
+
+모달은 논리적으로 화면의 최상단에 떠 있어야 합니다. 하지만 컴포넌트 내부에 모달을 선언할 경우, 부모 요소의 `z-index` 나 `overflow: hidden` 속성에 영향을 받아 모달이 잘리거나 다른 요소 뒤로 숨어버리는 스태킹 컨텍스트 문제가 발생합니다.
+이를 해결하기 위해 React에서는 `createPortal` 등을 사용해 DOM 트리의 바깥(보통 body태그 바로 아래)으로 모달을 물리적으로 빼내는 추가 작업이 필요합니다.
+
+### 파편화되는 상태 관리 (State Management)
+
+가장 흔한 방식인 선언적 방식(Declarative)으로 모달을 구현할 때의 문제입니다. 모달 하나를 제어하려면 `const [isOpen, setIsOpen] = useState(false)`와 같은 상태 값이 컴포넌트마다 필요합니다.
+만약 한 페이지에 성격이 다른 모달이 3~4개씩 존재한다면 어떨까요? 모달을 열고 닫는 상태 값과 핸들러 함수들로 인해 비즈니스 로직이 들어갈 자리에 UI 상태 코드가 가득 차게 됩니다.
+
+```tsx
+const [isModal1Open, setIsModal1Open] = useState(false);
+const [isModal2Open, setIsModal2Open] = useState(false);
+const [isModal3Open, setIsModal3Open] = useState(false);
+const [isModal4Open, setIsModal4Open] = useState(false);
+```
+
+### 웹 접근성(a11y)과 꼼꼼한 UX 처리
+
+눈에 보이는 디자인 외에도 **보이지 않는 사용성** 을 챙기는 것이 가장 까다롭습니다.
+
+포커스 트랩(Focus Trap): 키보드의 Tab 키를 눌러 탐색할 때, 포커스가 모달 창 밖으로 빠져나가 배경 요소들을 탐색하지 않도록 가둬두어야 합니다.
+
+스크롤 잠금 (Scroll Lock): 모달이 열려 있는 동안에는 배경 화면이 스크롤되지 않아야 합니다.
+
+다양한 닫기 액션 지원: 스크린 리더 사용자를 위한 명확한 닫기 버튼뿐만 아니라, ESC 키보드 입력이나 모달 바깥(Dimmed/Backdrop) 영역을 클릭했을 때 닫히는 기능도 필수적입니다.
+
+이 모든 예외 상황을 직접 구현하다 보면 코드는 기하급수적으로 비대해집니다.
+
+그래서, 어떻게 구현하는 것이 **좋은** 방법일까?
+
+이러한 문제들을 겪으며 저는 "어떻게 하면 개발자 경험(DX)을 해치지 않으면서도, 사용자에게 친절하고 웹 표준을 지키는 모달을 만들 수 있을까?"를 고민하게 되었습니다.
+
+이번 글에서는 크게 두 가지 관점에서 제가 찾은 해답을 공유해보려 합니다.
+첫 번째는 HTML5의 네이티브 기능을 활용한 의미론적인 접근이고, 두 번째는 복잡한 상태 관리를 해결하기 위한 아키텍처적 접근입니다.
+
+## 첫 번째 해답: HTML5 `<dialog>` 태그의 마법 (의미론적 접근)
+
+이전에 모달을 띄우기 위해 우리는 수많은 `<div>` 태그를 겹겹이 쌓고, 그 안에 `role="dialog"`와 `aria-modal="true"` 같은 접근성 속성을 일일이 달아주어야 했습니다. 스크롤을 막고 포커스를 가두기 위해 복잡한 `useEffect` 로직을 짜는 것은 덤이었죠.
+
+하지만 이제 HTML5의 네이티브 태그인 **`<dialog>`** 태그를 활용하면 이 모든 복잡한 과정들을 브라우저에 우아하게 위임할 수 있습니다.
+
+[mdn dialog](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog) 자세한 내용은 이곳을 참고해주세요.
+
+### 1. Z-index 지옥 탈출 (Top Layer의 등장)
+
+기존 컴포넌트 내부에서 모달을 선언하면 부모의 `overflow: hidden`이나 `z-index`에 갇혀 모달이 잘리는 현상이 발생했습니다. 그래서 `createPortal`을 이용해 DOM 트리 바깥(주로 'body' 태그 바로 아래)으로 렌더링 위치를 강제로 옮기는 꼼수를 써야 했죠.
+
+하지만 `dialog` 태그를 자바스크립트의 `showModal()` 메서드로 열게 되면, 브라우저가 자체적으로 관리하는 **최상위 레이어(Top Layer)**에 모달이 렌더링됩니다. 즉, 부모 요소의 CSS 속성에 영향을 받지 않고 화면의 가장 높은 곳에 확실하게 위치하게 됩니다. 더 이상 `createPortal`을 쓰거나 `z-index: 9999`를 남발할 필요가 없어진 것입니다.
+
+### 2. 공짜로 얻는 접근성과 UX
+
+네이티브 태그를 사용할 때의 가장 큰 장점은, 브라우저가 기본적으로 제공하는 훌륭한 접근성(a11y)과 UX 처리를 '공짜로' 누릴 수 있다는 점입니다.
+
+- **ESC 키로 닫기:** 별도의 키보드 이벤트 리스너를 달지 않아도, 사용자가 `ESC` 키를 누르면 모달이 자연스럽게 닫힙니다.
+- **포커스 트랩 (Focus Trap):** `showModal()`로 열린 모달은 자동으로 포커스를 가로채며, `Tab` 키를 눌러도 모달 바깥의 배경 요소로 포커스가 빠져나가지 않습니다.
+- **간편한 백드롭(Backdrop) 스타일링:** 예전처럼 모달 뒤를 어둡게 덮는 딤 처리(Dimmed)용 `<div>`를 따로 만들 필요가 없습니다. `dialog` 태그 전용 가상 요소인 `::backdrop`을 사용해 CSS만으로 간단하게 뒷배경을 제어할 수 있습니다.
+
+### 3. 코드 비교: 얼마나 깔끔해졌을까?
+
+과거의 방식과 `<dialog>`를 활용한 방식을 코드로 비교해 보면 그 차이가 더욱 명확합니다.
+
+**❌ 기존의 복잡했던 방식 (div 떡칠과 끝없는 useEffect)**
+
+```tsx
+import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+const TraditionalModal = ({ isOpen, onClose, children }) => {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // 1. 스크롤 잠금 (Scroll Lock) 처리
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+
+    // 2. 웹 접근성(a11y): ESC 키 입력 시 닫기
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    // 3. 포커스 강제 이동
+    if (modalRef.current) {
+      modalRef.current.focus();
+    }
+
+    // 클린업(Cleanup)
+    return () => {
+      document.body.style.overflow = originalStyle;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  // 4. 모달 바깥(Backdrop) 영역 클릭 시 닫기
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  // 5. createPortal을 사용한 렌더링
+  return createPortal(
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50' onClick={handleBackdropClick}>
+      <div className='bg-white p-6 rounded-lg shadow-xl' role='dialog' aria-modal='true' tabIndex={-1} ref={modalRef}>
+        {children}
+        <button onClick={onClose} className='absolute top-2 right-2'>
+          ✕
+        </button>
+      </div>
+    </div>,
+    document.body,
+  );
+};
+
+export default TraditionalModal;
+```
+
+**✅ &lt;dialog&gt; 태그를 활용한 우아한 방식**
+
+```tsx
+import { useEffect, useRef } from 'react';
+
+interface DialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}
+
+const NativeDialog = ({ isOpen, onClose, children }: DialogProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (isOpen) {
+      dialog.showModal(); // Top Layer에 렌더링, 포커스 트랩, 백드롭 자동 활성화!
+    } else {
+      dialog.close();
+    }
+  }, [isOpen]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      onClose={onClose} // ESC 키를 눌러 브라우저 자체 기능으로 닫힐 때, React 상태(isOpen)를 동기화하기 위해 필수!
+      className='p-6 rounded-lg shadow-xl backdrop:bg-black backdrop:bg-opacity-50'
+    >
+      {children}
+      <button onClick={onClose} className='absolute top-2 right-2'>
+        ✕
+      </button>
+    </dialog>
+  );
+};
+
+export default NativeDialog;
+```
+
+### 4. `<dialog>`의 유일한 단점? 애니메이션 문제 해결하기
+
+`<dialog>` 태그가 이렇게 완벽해 보이지만, 실제로 도입하려고 하면 큰 벽에 부딪히게 됩니다. 바로 **페이드인(Fade-in) 같은 부드러운 애니메이션을 주기가 까다롭다**는 점입니다.
+
+왜 그럴까요? `<dialog>`는 닫혀있을 때 브라우저 엔진에 의해 `display: none`으로 처리됩니다. CSS에서 `display: none`에서 `display: block`으로 변할 때는 `transition`이 먹히지 않는다는 고질적인 문제가 있죠.
+
+하지만 최근 CSS에 새로운 스펙이 추가되면서, 자바스크립트의 꼼수 없이 순수 CSS만으로 이 문제를 우아하게 해결할 수 있게 되었습니다. 핵심은 **`@starting-style`** 과 **`allow-discrete`** 입니다.
+
+하지만 최근 CSS에 새로운 스펙이 추가되면서, 자바스크립트의 꼼수 없이 순수 CSS만으로 이 문제를 우아하게 해결할 수 있게 되었습니다. 핵심은 **`@starting-style`** 과 **`allow-discrete`** 입니다.
+
+#### 최신 CSS를 활용한 우아한 모달 애니메이션
+
+아래의 CSS 코드를 적용하면, 모달이 열릴 때와 닫힐 때 모두 부드러운 애니메이션이 적용됩니다.
+
+```css
+/* 1. 모달이 닫혀있을 때의 기본 상태 (목적지) */
+dialog {
+  opacity: 0;
+  transform: translateY(20px);
+  /* 최신 CSS: display와 overlay 속성에도 애니메이션을 허용(allow-discrete)합니다 */
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    overlay 0.3s allow-discrete,
+    display 0.3s allow-discrete;
+}
+
+/* 2. 모달이 열려있을 때의 상태 */
+dialog[open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3. 모달이 막 열리기 '시작'할 때의 상태 (@starting-style) */
+/* display:none 에서 변할 때 이 상태를 거쳐서 애니메이션이 시작됩니다. */
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* -------------------------------------- */
+/* 덤: 뒷배경(Backdrop) 페이드인 애니메이션 */
+/* -------------------------------------- */
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0);
+  transition:
+    background-color 0.3s ease,
+    overlay 0.3s allow-discrete,
+    display 0.3s allow-discrete;
+}
+
+dialog[open]::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+```
+
+다만 `@starting-style` 시스템이 비교적 최신 css라 몇몇 브라우저 버전에서 지원되지 않는 문제가 있습니다.
+
+이를 위해 프로덕트의 주 사용자 브라우저 버전을 고려하여 적절한 구현 방식을 택해야할 것 같습니다.
+
+![css transition-behavior 지원 브라우저](/thumbnail/good-dialog/css-compare.png)
+
+다음 포스트에선 페이지 여러 곳곳에서 사용하는 다양한 모달에대한 상태 관리를 해결하기 위한 아키텍처적 접근에 대해 공유해보려 합니다.
+
+to be continued...
+
+## 참고
+
+[토스 디자인 시스템](https://tossmini-docs.toss.im/tds-react-native/components/dialog/)
+[Mdn Dialog](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
+[Can I use @starting-style](https://caniuse.com/?search=transition-behavior+)
