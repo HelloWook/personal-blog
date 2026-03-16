@@ -193,11 +193,9 @@ export default NativeDialog;
 
 ### 4. `<dialog>`의 유일한 단점? 애니메이션 문제 해결하기
 
-`<dialog>` 태그가 이렇게 완벽해 보이지만, 실제로 도입하려고 하면 큰 벽에 부딪히게 됩니다. 바로 **페이드인(Fade-in) 같은 부드러운 애니메이션을 주기가 까다롭다**는 점입니다.
+`<dialog>` 태그가 이렇게 완벽해 보이지만, 실제로 도입하려고 하면 큰 벽에 부딪히게 됩니다. 바로 **페이드인(Fade-in) 같은 부드러운 애니메이션을 주기가 까다롭다** 는 점입니다.
 
 왜 그럴까요? `<dialog>`는 닫혀있을 때 브라우저 엔진에 의해 `display: none`으로 처리됩니다. CSS에서 `display: none`에서 `display: block`으로 변할 때는 `transition`이 먹히지 않는다는 고질적인 문제가 있죠.
-
-하지만 최근 CSS에 새로운 스펙이 추가되면서, 자바스크립트의 꼼수 없이 순수 CSS만으로 이 문제를 우아하게 해결할 수 있게 되었습니다. 핵심은 **`@starting-style`** 과 **`allow-discrete`** 입니다.
 
 하지만 최근 CSS에 새로운 스펙이 추가되면서, 자바스크립트의 꼼수 없이 순수 CSS만으로 이 문제를 우아하게 해결할 수 있게 되었습니다. 핵심은 **`@starting-style`** 과 **`allow-discrete`** 입니다.
 
@@ -268,5 +266,7 @@ to be continued...
 ## 참고
 
 [토스 디자인 시스템](https://tossmini-docs.toss.im/tds-react-native/components/dialog/)
+
 [Mdn Dialog](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
+
 [Can I use @starting-style](https://caniuse.com/?search=transition-behavior+)

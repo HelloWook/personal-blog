@@ -45,7 +45,8 @@ const PostDetail = ({ mdxContent }: PostDetailProps) => {
                   <Image
                     {...props}
                     alt={props.alt ?? '커버 이미지'}
-                    fill
+                    width={1200}
+                    height={675}
                     className='contain rounded-xl'
                     blurDataURL={blurDataURL}
                     placeholder='blur'
