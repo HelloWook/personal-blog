@@ -1,27 +1,34 @@
-'use client';
-
+import Link from 'next/link';
 import {useTranslations} from 'next-intl';
 
 const ALL_SERIES = 'All';
 
 interface PostSeriesListProps {
   seriesList: string[];
-  onSeriesChange: (series: string) => void;
+  selectedSeries: string;
 }
 
-const PostSeriesList = ({ seriesList, onSeriesChange }: PostSeriesListProps) => {
+const PostSeriesList = ({ seriesList, selectedSeries }: PostSeriesListProps) => {
   const t = useTranslations('PostPage');
-  const buttonStyle = `text-2xl cursor-pointer`;
+  const baseStyle = 'text-2xl';
+  const activeStyle = 'font-bold underline';
 
   return (
     <div className='flex items-center justify-center gap-6 mb-8'>
-      <button className={buttonStyle} onClick={() => onSeriesChange(ALL_SERIES)}>
+      <Link
+        href='/posts'
+        className={`${baseStyle} ${selectedSeries === ALL_SERIES ? activeStyle : ''}`}
+      >
         {t('all')}
-      </button>
+      </Link>
       {seriesList.map((series) => (
-        <button key={series} className={buttonStyle} onClick={() => onSeriesChange(series)}>
+        <Link
+          key={series}
+          href={`/posts?series=${encodeURIComponent(series)}`}
+          className={`${baseStyle} ${selectedSeries === series ? activeStyle : ''}`}
+        >
           {series}
-        </button>
+        </Link>
       ))}
     </div>
   );

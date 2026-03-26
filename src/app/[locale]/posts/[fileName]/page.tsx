@@ -2,6 +2,8 @@ import { getAllPostFileNames } from '@/utils/file';
 import { Metadata } from 'next';
 import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
+import TOC from '@/components/TOC/TOC';
+import { extractHeadings } from '@/utils/extractHeadings';
 import { routing } from '@/i18n/routing';
 import { cacheLife } from 'next/cache';
 
@@ -48,6 +50,7 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
   cacheLife('max');
 
   const { mdxContent, data } = parseMdx(fileName, locale);
+  const headings = extractHeadings(mdxContent);
 
   return (
     <>
@@ -77,6 +80,7 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
           }),
         }}
       />
+      <TOC headings={headings} />
       <PostDetail mdxContent={mdxContent} />
     </>
   );
