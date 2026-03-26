@@ -6,6 +6,7 @@ import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { Suspense } from 'react';
+import NavigationProgress from '@/components/NavigationProgress/NavigationProgress';
 
 export const metadata: Metadata = {
   title: {
@@ -107,7 +108,8 @@ export default async function RootLayouta({
         />
       </head>
       <body>
-        <Suspense fallback={<div>Loading...</div>}>
+        <NavigationProgress />
+        <Suspense>
           <NextIntlClientProvider>
             <Drawer />
             <div className='max-w-[900px] w-[90%] min-h-screen m-auto'>

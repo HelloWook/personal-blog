@@ -24,7 +24,7 @@ const prettyCodeOptions: Options = {
 const PostDetail = ({ mdxContent }: PostDetailProps) => {
   return (
     <>
-      <article>
+      <article className='animate-fade-in-up'>
         <MDXRemote
           source={mdxContent}
           options={{

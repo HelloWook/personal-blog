@@ -1,11 +1,12 @@
 'use client';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import {useParams} from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useTransition } from 'react';
 
 const LanguageSelector = () => {
 const pathname = usePathname();
 const router = useRouter();
+const [isPending, startTransition] = useTransition();
 
 const params = useParams();
   const languages = [
@@ -32,9 +33,10 @@ const params = useParams();
 
   const handleLanguageChange = (newLocale: string) => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
-    router.replace(pathname, { locale: newLocale });
+    startTransition(() => {
+      router.replace(pathname, { locale: newLocale });
+    });
     if (currentTheme) {
-      
       setTimeout(() => {
         document.documentElement.setAttribute('data-theme', currentTheme);
       }, 0);
