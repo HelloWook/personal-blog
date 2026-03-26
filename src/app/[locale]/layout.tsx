@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { Suspense } from 'react';
 import NavigationProgress from '@/components/NavigationProgress/NavigationProgress';
+import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 
 export const metadata: Metadata = {
   title: {
@@ -109,6 +110,7 @@ export default async function RootLayouta({
       </head>
       <body>
         <NavigationProgress />
+        <ScrollToTop />
         <Suspense>
           <NextIntlClientProvider>
             <Drawer />
