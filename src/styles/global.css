@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 
 @plugin "daisyui" {
-  themes: synthwave, pastel --default;
+  themes:
+    synthwave,
+    pastel --default;
 }
 @plugin "daisyui/theme" {
   name: 'synthwave';
@@ -34,6 +36,10 @@ body {
   h6,
   p {
     @apply text-base-content;
+  }
+
+  :not(pre) > code {
+    @apply px-1.5 py-0.5 rounded-md text-[0.9em] font-mono bg-secondary/80! text-secondary-content!;
   }
 
   figure[data-rehype-pretty-code-figure] {

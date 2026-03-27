@@ -44,6 +44,8 @@ const PostDetail = ({ mdxContent }: PostDetailProps) => {
               const id = text.toLowerCase().replace(/[^a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ\s-]/g, '').replace(/\s+/g, '-');
               return <h3 {...props} id={id} className='mt-8 mb-2 text-xl font-semibold' />;
             },
+            ul: (props) => <ul {...props} className='my-4 pl-6 list-disc leading-8' />,
+            ol: (props) => <ol {...props} className='my-4 pl-6 list-decimal leading-8' />,
             a: (props) => <a {...props} className='text-blue-500 underline-animation' />,
             pre: Pre,
             img: async (props) => {
