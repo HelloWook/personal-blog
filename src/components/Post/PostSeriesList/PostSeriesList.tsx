@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {useTranslations} from 'next-intl';
 
 const ALL_SERIES = 'All';
@@ -6,29 +5,30 @@ const ALL_SERIES = 'All';
 interface PostSeriesListProps {
   seriesList: string[];
   selectedSeries: string;
+  onSelect: (series: string) => void;
 }
 
-const PostSeriesList = ({ seriesList, selectedSeries }: PostSeriesListProps) => {
+const PostSeriesList = ({ seriesList, selectedSeries, onSelect }: PostSeriesListProps) => {
   const t = useTranslations('PostPage');
-  const baseStyle = 'text-2xl';
+  const baseStyle = 'text-2xl cursor-pointer';
   const activeStyle = 'font-bold underline';
 
   return (
     <div className='flex items-center justify-center gap-6 mb-8'>
-      <Link
-        href='/posts'
+      <button
+        onClick={() => onSelect(ALL_SERIES)}
         className={`${baseStyle} ${selectedSeries === ALL_SERIES ? activeStyle : ''}`}
       >
         {t('all')}
-      </Link>
+      </button>
       {seriesList.map((series) => (
-        <Link
+        <button
           key={series}
-          href={`/posts?series=${encodeURIComponent(series)}`}
+          onClick={() => onSelect(series)}
           className={`${baseStyle} ${selectedSeries === series ? activeStyle : ''}`}
         >
           {series}
-        </Link>
+        </button>
       ))}
     </div>
   );
