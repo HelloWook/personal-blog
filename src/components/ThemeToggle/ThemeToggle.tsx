@@ -17,6 +17,7 @@ const ThemeToggle = ({ defaultTheme }: ThemeToggleProps) => {
   const handleThemeChange = async () => {
     const nextTheme = theme === 'synthwave' ? 'pastel' : 'synthwave';
     document.documentElement.setAttribute('data-theme', nextTheme);
+    document.cookie = `theme=${nextTheme};path=/;max-age=31536000`;
     setTheme(nextTheme);
     throttleWrapper(() => saveTheme(nextTheme));
   };

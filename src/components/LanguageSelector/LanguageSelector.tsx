@@ -6,7 +6,7 @@ import { useEffect, useTransition } from 'react';
 const LanguageSelector = () => {
 const pathname = usePathname();
 const router = useRouter();
-const [isPending, startTransition] = useTransition();
+const [, startTransition] = useTransition();
 
 const params = useParams();
   const languages = [
@@ -32,16 +32,10 @@ const params = useParams();
   }, [params.locale]);
 
   const handleLanguageChange = (newLocale: string) => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
     startTransition(() => {
       router.replace(pathname, { locale: newLocale });
     });
-    if (currentTheme) {
-      setTimeout(() => {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-      }, 0);
-    }
-   };
+  };
   return (
     <div className='dropdown dropdown-end'>
       <div tabIndex={0} role='button' className='btn btn-ghost btn-sm'>
