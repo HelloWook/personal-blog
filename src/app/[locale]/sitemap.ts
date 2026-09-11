@@ -4,7 +4,7 @@ import path from 'path';
 import matter from 'gray-matter';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.hellowook.com';
+  const baseUrl = 'https://hellowook.is-a.dev';
 
   // 정적 페이지들
   const staticPages = [

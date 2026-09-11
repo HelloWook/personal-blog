@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
     openGraph: {
       type: 'article',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
-      url: `https://www.hellowook.com/${locale}/posts/${fileName}`,
+      url: `https://hellowook.is-a.dev/${locale}/posts/${fileName}`,
       title: data.title,
       description: data.excerpt,
       siteName: locale === 'ko' ? 'HelloWook 블로그' : 'HelloWook Blog',
