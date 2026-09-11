@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://www.hellowook.com/sitemap.xml',
+    sitemap: 'https://hellowook.is-a.dev/sitemap.xml',
   };
 }

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://www.hellowook.com'),
+  metadataBase: new URL('https://hellowook.is-a.dev'),
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: 'https://www.hellowook.com',
+    url: 'https://hellowook.is-a.dev',
     title: 'HelloWook 블로그',
     description: 'HelloWook의 개인 블로그입니다. 프론트엔드 개발과 기술에 대한 글을 공유합니다.',
     siteName: 'HelloWook 블로그',
@@ -101,7 +101,7 @@ export default async function RootLayouta({
               '@type': 'Person',
               name: 'HelloWook',
               description: '프론트엔드 개발자',
-              url: 'https://hellowook.com',
+              url: 'https://hellowook.is-a.dev',
               sameAs: ['https://github.com/HelloWook'],
               knowsAbout: ['Frontend Development', 'React', 'Next.js', 'TypeScript', 'JavaScript'],
             }),
