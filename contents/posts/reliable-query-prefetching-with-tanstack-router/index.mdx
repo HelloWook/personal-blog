@@ -1,0 +1,228 @@
+---
+title: 'TanStack Router에서 프리페칭을 안전하게 하는 법'
+excerpt: 'TkDodo의 Reliable Query Prefetching with TanStack Router 번역글입니다. route loader와 컴포넌트가 어긋나며 생기는 워터폴을 Route Context로 잡아냅니다.'
+date: '2026-09-15'
+thumbnail: '/thumbnail/reliable-query-prefetching-with-tanstack-router/index.jpg'
+tags:
+  - ReactJs
+  - TanStack Router
+  - React Query
+slug: reliable-query-prefetching-with-tanstack-router
+series: Translation
+---
+
+# TanStack Router에서 프리페칭을 안전하게 하는 법
+
+> 이 글은 TkDodo의 [Reliable Query Prefetching with TanStack Router](https://tkdodo.eu/blog/reliable-query-prefetching-with-tanstack-router)를 번역한 글입니다.
+
+![TanStack Router에서 프리페칭을 안전하게 하는 법](/thumbnail/reliable-query-prefetching-with-tanstack-router/index.jpg)
+
+사진: [Mario Heller](https://unsplash.com/@heller_mario)
+
+이 시리즈의 [지난 글](https://tkdodo.eu/blog/tan-stack-router-and-query)에서는 TanStack Router와 TanStack Query로 데이터를 가져올 때 제가 권하는 패턴과 그 장점을 다뤘습니다. 요약하면 loader에서 최대한 일찍 fetch를 시작하되, loader를 이벤트 핸들러처럼 다뤄서 컴포넌트가 `useSuspenseQuery`나 `useQuery`로 그 promise를 "받아가게" 하자는 이야기였습니다.
+
+여기서 얻어갈 건 하나입니다. 컴포넌트는 되도록 스스로 데이터를 가져오지 않아야 합니다. 자기 데이터 요구사항을 스스로 챙기고 렌더링할 때 알아서 해결하는 컴포넌트, 이론적으로야 훌륭하죠. 하지만 실제로 fetch가 거기서만 일어난다면 이상적인 시점보다 한참 늦게 가져오게 되고, [fetch 워터폴](https://tkdodo.eu/blog/seeding-the-query-cache#fetch-waterfalls)을 만들기도 쉽습니다. suspense를 쓰든 안 쓰든 마찬가지입니다.
+
+그래서 route loader가 구원투수로 등장합니다. 🎉 다만 늘 그렇듯 대가가 따릅니다.
+
+## 두 곳으로 갈라지는 문제
+
+이 방식의 큰 단점은 컴포넌트에서 하는 일을 route loader에 그대로 한 번 더 쓴다는 겁니다. 중복이 큰일은 아니고, 앱이 주는 UX를 생각하면 받아들일 만한 트레이드오프입니다. 하지만 앱이 커질수록 반드시 명심해야 할 조건이 하나 있습니다.
+
+> **두 곳이 100% 일치해야 합니다.**
+
+시간이 지날수록 이걸 지키기가 어려워집니다. 최소 예제는 블로그 글에는 좋지만 현실을 그대로 보여주지는 않습니다. TanStack Router로 규모 있는 앱을 만들면서 저희는 이 "한계"에 금방 부딪혔습니다. 원인은 몇 가지였습니다.
+
+**1. 컴포넌트는 보통 `Route` 파일에 머무르지 않습니다.**
+
+적어도 전부 머무르지는 않습니다. `component: Dashboard`는 깔끔하지만, `Dashboard`는 대개 더 많은 컴포넌트로 쪼개지고 그 컴포넌트들도 route API에 접근해야 합니다. TanStack Router에는 [getRouteApi](https://tanstack.com/router/latest/docs/framework/react/api/router/getRouteApiFunction#getrouteapi-returns)가 있어서 파일을 나누기 쉽습니다.
+
+```tsx
+const Route = getRouteApi('/dashboard/$dashboardId')
+
+function DashboardContent() {
+  const params = Route.useParams()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId),
+  )
+}
+```
+
+파일을 나누는 건 좋은 일입니다. 그런데 이렇게 되면 컴포넌트가 Query를 쓰는 방식을 바꿀 때 route loader도 함께 고쳐야 한다는 생각이 바로 떠오르지 않습니다.
+
+**2. 둘이 어긋나도 에러가 나지 않습니다.**
+
+프리페치 불일치를 잡아줄 [Strict Mode](https://github.com/TanStack/query/discussions/8064)를 고민해 왔지만 지금은 아무것도 없습니다. 그래서 실수로 어긋나기가 정말 쉽습니다.
+
+제품이 커지고 기능이 붙을 때 컴포넌트의 fetch 방식만 바꿔도 문제가 둘 생깁니다. 필요하지도 않은 데이터를 프리페치하면서 route를 막아버리고, 정작 필요한 데이터는 또 한 번 가져오면서 워터폴을 만듭니다.
+
+반대로 컴포넌트에서 쿼리를 지우고 route loader를 정리하지 않으면, 아무도 쓰지 않는 데이터를 계속 프리페치하게 됩니다.
+
+## 예제
+
+Dashboard에 과거 날짜로 필터를 걸어 그 시점의 데이터와 위젯을 스냅샷처럼 보는 기능을 붙인다고 해봅시다. 이 화면을 공유할 수 있어야 하니 Dashboard route에 `?asOf=YYYY-MM-DD`라는 선택적 query parameter를 추가하고 컴포넌트에서 받아 쓰겠습니다.
+
+```tsx
+const Route = getRouteApi('/dashboard/$dashboardId')
+
+function DashboardContent() {
+  const params = Route.useParams()
+  const { asOf } = Route.useSearch()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId, { asOf }),
+  )
+}
+```
+
+Dashboard를 열면 잘 동작하고, search param을 바꾸면 그 시점 데이터도 나옵니다. 좋아 보이니 배포합시다. 🚢
+
+버그가 뭔지는 이미 눈치채셨을 겁니다. 이제 Dashboard의 route를 공유하면 이런 일이 벌어집니다.
+
+- route loader가 "오늘" 기준 데이터를 불러옵니다. loader에는 `asOf`를 반영하지 않았으니까요.
+- 그 데이터가 준비될 때까지 기다린 뒤 컴포넌트를 렌더링합니다.
+- 이제 컴포넌트 안에서 `asOf`가 붙은 채로 다시 fetch합니다.
+- `asOf`는 `QueryKey`의 일부여야 하므로 완전히 새로운 Query가 됩니다. 그 데이터가 올 때까지 컴포넌트는 다시 suspend됩니다.
+
+그제야 정확한 데이터로 컴포넌트가 렌더링됩니다.
+
+이건 꽤 곤란합니다. 가장 흔한 작업인 "기능 추가"를 제대로 해내기 어렵게 만들고, 여기서 생기는 버그는 눈에 잘 띄지도 않습니다. 실제로 저희도 초반에 만든 route 몇 개에서 이 문제를 겪었습니다. route loader에서 InfiniteQuery를 프리페치하고 있었는데 거기에 `search`, `sortBy`, `sortDirection` 같은 선택적 query param이 붙어 있었죠. 😔
+
+저지르기 너무 쉬운 실수입니다. 어떻게 고쳐야 할까요?
+
+## route loader 고치기
+
+일단 route loader에도 선택적 param을 반영해야 합니다. 여기에는 [loaderDeps](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#using-search-params-in-loaders)라는 한 겹의 간접 층이 필요합니다.
+
+> **왜 loaderDeps가 필요할까요?**
+>
+> path param은 언제나 loader에 주입됩니다. path가 바뀌었다면 다른 route로 이동한 것이고 그 데이터를 불러와야 한다는 게 분명하니까요. 하지만 query param은 사정이 다릅니다.
+>
+> query param은 route가 데이터를 가져오는 방식과 아무 상관 없는 클라이언트 상태를 담는 데 자주 쓰입니다. query param이 *아무거나* 바뀔 때마다 loader를 다시 돌리고 싶지는 않겠죠. 그래서 어떤 query param이 불러올 데이터를 식별하는지 조금 더 명시적으로 알려줘야 합니다.
+
+```tsx
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  validateSearch: type({ 'asOf?': 'string.date.iso' }).assert,
+  loaderDeps: ({ search: { asOf } }) => ({ asOf }),
+  loader: async ({ context, params, deps }) => {
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId, deps),
+    )
+  },
+  component: Dashboard,
+})
+```
+
+이걸로 증상은 사라집니다. 불필요한 요청을 여러 번 보내지 않고 URL을 다시 공유할 수 있게 됐죠. 하지만 근본 원인은 전혀 건드리지 못했습니다. 다음 route에서 또 같은 실수를 할 가능성이 여전히 큽니다. 실수를 줄이려면 중복 자체를 없애야 합니다.
+
+### 중복 없애기
+
+쿼리와 관련된 두 호출을 나란히 놓고 봅시다. loader 쪽과 컴포넌트 쪽입니다.
+
+```tsx
+//loader
+await context.queryClient.ensureQueryData(
+  dashboardQueryOptions(params.dashboardId, deps),
+)
+
+// component
+const { data } = useSuspenseQuery(
+  dashboardQueryOptions(params.dashboardId, { asOf }),
+)
+```
+
+둘 다 같은 query options를 씁니다. 다른 건 그 옵션을 넘기는 함수뿐입니다. 한 번만 명령형으로 가져오는 `ensureQueryData`와, 반응형 구독을 거는 `useSuspenseQuery`죠.
+
+앞선 버그는 이 둘이 같은 옵션을 쓰지 않아서 생겼습니다. 컴포넌트가 늘 loader와 같은 `queryOptions`에 의존한다면 둘이 어긋날 수가 없습니다. 그러니 옵션을 **Route Context**에 넣고 양쪽에서 꺼내 쓰면 됩니다.
+
+> **Route Context**
+>
+> Route Context는 [#2: Context Inheritance in TanStack Router](https://tkdodo.eu/blog/context-inheritance-in-tan-stack-router)에서 다룬 적이 있습니다. 거기서 `beforeLoad`로 context를 덧붙일 수 있다고 했죠.
+>
+> 맞는 말이지만 `beforeLoad`는 route가 바뀔 때마다 실행되고 `loaderDeps` 대신 전체 `search`를 받습니다. 새로 생긴 `context` 함수는 이 문제를 해결합니다. loader가 돌 때만 함께 실행되거든요. 이 글에서 `context`를 쓰는 이유입니다. 다만 지금은 문서화되어 있지 않습니다.
+
+```tsx
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  validateSearch: type({ 'asOf?': 'string.date.iso' }).assert,
+  loaderDeps: ({ search: { asOf } }) => ({ asOf }),
+  context: ({ params, deps }) => ({
+    dashboardQueryOptions: dashboardQueryOptions(
+      params.dashboardId,
+      deps,
+    ),
+  }),
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(
+      context.dashboardQueryOptions,
+    )
+  },
+  component: Dashboard,
+})
+
+// 저 멀리 떨어진 다른 파일에서
+
+const routeApi = getRouteApi('/dashboard/$dashboardId')
+
+function DashboardContent() {
+  const context = routeApi.useRouteContext()
+  const { data } = useSuspenseQuery(context.dashboardQueryOptions)
+}
+```
+
+여기서 몇 가지가 달라졌습니다. 먼저 loader도 컴포넌트도 더는 `params`나 `deps`에 의존하지 않습니다. 이제 그것들을 쓰는 곳은 `context` 함수 하나뿐이고, 이 함수가 하는 일은 공유할 `queryOptions`를 만들어 적당한 키로 context에 얹는 것입니다.
+
+그다음 loader는 `context`만 쓰고, 컴포넌트도 `Route.useRouteContext()`로 `context`만 씁니다.
+
+이 얇은 간접 층에는 장점이 많습니다. 앞서 본 중복 버그가 아예 생길 수 없을 뿐 아니라, 어떤 컴포넌트가 프리페치된 쿼리를 쓰는지도 알 수 있습니다. 덕분에 컴포넌트에서 쿼리를 걷어낼 때 route loader도 들여다보고 프리페치를 정리하게 됩니다.
+
+게다가 context는 부모에게서 상속되므로 하위 route도 그 `queryOptions`를 알게 됩니다. 예를 들어 root route의 loader에서 사용자 데이터를 미리 가져올 수 있습니다.
+
+```tsx
+export const Route = createRootRouteWithContext<RouteContext>()({
+  validateSearch: type({ debug: `boolean=false` }).assert,
+  context: () => ({
+    userQueryOptions: queryOptions({
+      queryKey: ['user'],
+      queryFn: getUser,
+    }),
+  }),
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(
+      context.userQueryOptions,
+    )
+  },
+  component: Root,
+})
+```
+
+그리고 위젯에서도 함께 꺼내 씁니다.
+
+```tsx
+function Widget() {
+  const { userQueryOptions, dashboardQueryOptions } =
+    Route.useRouteContext()
+}
+```
+
+부모가 route context에 얹어둔 `queryOptions`라면 전부 보입니다. 🎉
+
+### 구독에 관한 마지막 이야기
+
+이 기능이 router에 들어왔을 때 저는 컴포넌트가 무엇을 구독하게 되는지가 조금 걱정됐습니다. 보시다시피 `useParams`와 `useSearch` 구독을 `useRouteContext` 호출 하나로 전부 바꿔버렸으니까요.
+
+```diff
+function DashboardContent() {
+-  const params = Route.useParams()
+-  const { asOf } = Route.useSearch()
++  const context = Route.useRouteContext()
+}
+```
+
+Route Context도 지원하는 [세밀한 구독](https://tkdodo.eu/blog/the-beauty-of-tan-stack-router#fine-grained-subscriptions)을 쓴다 해도, 렌더링마다 새 `queryOptions` 객체가 생기지 않을까요? 함수를 품고 있어서 structural sharing도 안 될 텐데 말입니다. 그러면 계속 리렌더링이 일어나지 않을까요?
+
+안심하셔도 됩니다. 그런 일은 없습니다. `context` 함수는 `params`나 `loaderDeps`가 바뀔 때만 실행됩니다. `debug`처럼 관계없는 search param이 바뀌었다면 Route Context를 구독한 컴포넌트는 불필요하게 리렌더링되지 않습니다.
+
+컴포넌트가 route loader에서 프리페치한 것을 실제로 쓰게 만드는 방법으로는, 지금까지 이 방식이 가장 낫고 확장성도 좋았습니다.
+
+---
+
+오늘은 여기까지입니다. 궁금한 점이 있다면 [bluesky](https://bsky.app/profile/tkdodo.eu)로 연락 주시거나 아래에 댓글을 남겨주세요. ⬇️
