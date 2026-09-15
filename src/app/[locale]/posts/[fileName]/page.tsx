@@ -32,7 +32,6 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
       title: data.title,
       description: data.excerpt,
       siteName: locale === 'ko' ? 'HelloWook 블로그' : 'HelloWook Blog',
-      publishedTime: data.date,
       images: [
         {
           url: data.thumbnail,
@@ -63,8 +62,6 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
             headline: data.title,
             description: data.excerpt,
             image: data.thumbnail,
-            datePublished: data.date,
-            dateModified: data.date,
             author: {
               '@type': 'Person',
               name: 'HelloWook',
@@ -75,7 +72,7 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
             },
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': `https://hellowook.dev/${locale}/posts/${fileName}`,
+              '@id': `https://hellowook.is-a.dev/${locale}/posts/${fileName}`,
             },
           }),
         }}
