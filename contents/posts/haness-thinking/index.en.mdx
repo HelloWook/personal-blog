@@ -1,0 +1,79 @@
+---
+title: 'Scattered Thoughts on the Harness'
+excerpt: 'Scattered thoughts on the harness'
+date: '2026-06-10'
+thumbnail: '/thumbnail/haness-thinking/index.png'
+tags:
+  - Harness
+slug: haness-thinking
+series: Article
+---
+
+# Harness
+
+Harnesses are all the rage these days. People talk about them as if they were about to build a Tower of Babel out of harnesses.
+
+Personally, I think technology tends to be **overestimated in the short run and underestimated in the long run**. That isn't my own insight — it's a law with a name attached to it: **Amara's Law**. Roy Amara put it this way: "We tend to overestimate the effect of a technology in the short run and underestimate the effect in the long run." That's exactly what I mean.
+
+Seen through that lens, claims that we can build enterprise-grade systems out of harnesses right now sound like a bit of a stretch. A textbook case of short-run overestimation. But that's only the short-run story. In the long run, I think the harness will become a familiar and important piece of technology for developers, because the harness as a perspective is genuinely interesting in itself. This post is my attempt to put that "why" into words.
+
+## So What Is a Harness?
+
+A harness, in the literal sense, is the set of gear you strap onto a horse. The point is to put a kind of bridle on an agent that would otherwise move around uncontrolled, so you can steer and constrain it toward the direction you want and get higher-quality, more consistent results. The etymology and the metaphor line up exactly.
+
+In the more current sense of the word, a harness is **the system layer around the model**. It deals with how context is managed, which tools are exposed and how they're described, how state is preserved, how permissions are enforced, and how errors are recovered from. In short, it's the code layer that **mediates between the model and the world**. An LLM fundamentally only emits text, so it can express the intent "read this file," but it can't open the file itself, remember the result, or decide what to do next. The harness is what fills that gap.
+
+What's interesting is that the word wasn't an agent term to begin with. It originally comes from the **test harness** in software testing — the fixture that isolates the system under test, injects inputs, and collects outputs. From there it moved into **evaluation harnesses** like EleutherAI's lm-evaluation-harness, and that's where a key insight shows up: "model performance is often determined by trivial implementation details." In other words, a model's score is not purely a property of the model; it's also a property of the measuring apparatus. Then, as the term arrived at today's **agent harness**, the role flipped. Where an evaluation harness _constrained_ the model, an agent harness _grants_ the model hands and feet. Same word, but the meaning shifted from restraint to empowerment.
+
+## The Results Really Do Change
+
+There is actual research showing that benchmark numbers move depending on which harness you strap onto the same model. [The harness & model relationship](https://cobusgreyling.medium.com/the-harness-model-relationship-ab285a8992a7)
+
+This isn't just a gut feeling; the numbers back it up. The most direct case is **Harness-Bench**, published by Qihoo360. Across 106 realistic tasks, swapping out nothing but the scaffolding moved scores by nearly **24 points**. That's the result of running 5,194 trajectories in total across 8 model backends × 6 harnesses. HKUDS's open-source NanoBot scored highest at 76.2, a 23.8-point gap over the worst harness. Same tasks, same model pool, different scaffolding.
+
+Other studies point the same way.
+
+- SWE-bench: the same base model landed anywhere from roughly **5% to 30%+** solve rate depending on harness configuration.
+- OS Symphony: rewriting the control logic from code into natural language alone took it from **30.4% → 47.2%** (runtime 361 min → 41 min, LLM calls 1,200 → 34).
+- Transferability: a harness optimized on one model carried over to five other models and improved all of them. The reusable asset is the harness, not the model.
+
+There are also reports that the quality of tool descriptions alone produced a measurable difference in task completion rate. Whether it's a design-system MCP mapping or a PR review tool, putting real effort into your tool schemas actually pays off in the numbers.
+
+## Does That Make the Harness a Silver Bullet? No
+
+This is the part I most wanted to write about. The claim that harness effects are large is true, but you have to look at **who is making the claim**.
+
+A good number of the sources emphasizing harness effects are **companies that sell harness tooling** — places like MindStudio. If "the harness matters more than the model" is true, the value of their product category goes up, so they have a direct stake in it. Look at data from **independent evaluators like METR or Scale AI**, on the other hand, and the picture gets noticeably more cautious. Scale AI's SWE-Atlas found that for some model families the choice of harness fell within the margin of error, and METR's benchmarks showed cases where Claude Code or Codex did not consistently beat a basic scaffold. The piece [The Agent Harness — MongoDB](https://medium.com/mongodb/the-agent-harness-why-the-llm-is-the-smallest-part-of-your-agent-system-bce68414ccfd) does a good job laying out both sides, and its conclusion is that "harness value varies by task type and model capability; both effects are real and each dominates in a different regime."
+
+Swyx went ahead and named this tension **"Big Model vs Big Harness."** The root of the debate is Rich Sutton's Bitter Lesson: in the end, general-purpose learning and scale beat structure that humans hand-wrote. From that angle, harness engineering is nothing more than temporary scaffolding to be torn down once models get strong enough. And indeed, Manus rewrote its harness several times as models evolved (five times in six months, by some accounts), shedding complexity each round. Elaborate tool definitions became general-purpose shell execution; a "manager agent" became a simple handoff. The stronger the model, the smaller the variance between harnesses. Weak models are heavily swayed by the harness; strong models absorb the difference.
+
+So yes, "building a Tower of Babel out of harnesses" is an overstatement at this point in time. Short-run overestimation.
+
+## Then Why Does It Matter in the Long Run?
+
+This is where the second half of Amara's Law kicks in. The key is that **you have to split the harness into two parts**.
+
+One is **compensatory scaffolding**: the planners, critics, and elaborate tool routers bolted on to cover for a model's weaknesses. This really does disappear as models get smarter, because the model replaces it with reasoning. "Scaffolding comes down once the building is finished" applies to this part.
+
+The other is **irreducible infrastructure**: context window management, state persistence, tool call execution, verification loops. None of that is a reasoning problem, so it doesn't go away no matter how smart the model gets. To borrow one writer's phrasing: "A model doesn't need to get smarter to write its progress to disk. It just needs a harness that persists state." Even the most capable model can't manage its own context window, execute its own tool calls, or verify its own work.
+
+And there's an even more interesting twist: the harness **isn't disappearing so much as being fused into the model**. Models today are post-trained with a particular harness in the loop. The model behind Claude Code learned to use the very harness it was trained on. Change the tool implementation and performance can actually drop, precisely because of that tight coupling. The harness isn't losing value; it's co-evolving into the model weights.
+
+Put it together and the picture looks like this. As models get stronger, **the external scaffold gets thinner**, **the score gaps between models converge**, but **the irreducible layers — context, state, execution — don't disappear**, and in fact **they become one body with the model**. "Once models get good, harnesses become worthless" is just an oversimplified version of one extreme of this debate.
+
+## Conclusion
+
+The claim that we can finish an enterprise-grade system with harnesses right now is closer to short-run overestimation. I agree with that much. But if you get so tired of the overblown talk that you start dismissing harnesses altogether, that's exactly the second half of Amara's Law catching you — long-run underestimation.
+
+The harness gets thinner without going away; if anything, fusing with the model makes it a more fundamental layer. Its essence — mediating the model's output into action in the world — doesn't change. That's why I think the harness will become a familiar and important technology for developers, right there in the spot where today's overheated expectations settle down.
+
+The technology of putting a bridle on something uncontrolled. The smarter models get, the thinner the reins will be — but the reins themselves won't disappear.
+
+---
+
+**References**
+
+- [The harness & model relationship — Cobus Greyling](https://cobusgreyling.medium.com/the-harness-model-relationship-ab285a8992a7) (A walkthrough of Harness-Bench. Note that the author is a Kore.ai evangelist, so factor in the editorial framing.)
+- [The Agent Harness — MongoDB](https://medium.com/mongodb/the-agent-harness-why-the-llm-is-the-smallest-part-of-your-agent-system-bce68414ccfd) (Lays out data from both sides of Big Model vs Big Harness. The most balanced of the bunch.)
+- [Harness-Bench paper (arxiv 2605.27922)](https://arxiv.org/abs/2605.27922) (Qihoo360, preprint)
+- [Harness design for long-running apps — sehyunny](https://velog.io/@sehyunny/harness-design-long-running-apps) (Korean)
