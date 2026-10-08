@@ -1,4 +1,11 @@
 {
+  "Meta": {
+    "siteName": "HelloWook Blog",
+    "title": "HelloWook Blog",
+    "description": "HelloWook's personal blog, sharing writing on frontend development and technology.",
+    "keywords": "blog, HelloWook, frontend, Next.js, React, TypeScript, development, technology",
+    "postsDescription": "A list of posts on frontend development and technology."
+  },
   "Introduce": {
     "hello": "Hello!",
     "like": "Lover",

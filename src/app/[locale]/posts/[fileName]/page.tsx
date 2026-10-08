@@ -6,6 +6,7 @@ import TOC from '@/components/TOC/TOC';
 import { extractHeadings } from '@/utils/extractHeadings';
 import { routing } from '@/i18n/routing';
 import { cacheLife } from 'next/cache';
+import { SITE_URL, OG_LOCALE, buildAlternates } from '@/utils/seo';
 
 interface PostDetailPageProps {
   params: Promise<{ locale: string; fileName: string }>;
@@ -25,21 +26,28 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
     description: data.excerpt,
     keywords: data.tags,
     authors: [{ name: 'HelloWook' }],
+    alternates: buildAlternates(locale, `posts/${fileName}`),
     openGraph: {
       type: 'article',
-      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
-      url: `https://hellowook.is-a.dev/${locale}/posts/${fileName}`,
+      locale: OG_LOCALE[locale],
+      url: `/${locale}/posts/${fileName}`,
       title: data.title,
       description: data.excerpt,
       siteName: locale === 'ko' ? 'HelloWook 블로그' : 'HelloWook Blog',
+      publishedTime: data.date,
+      // 썸네일 비율이 글마다 달라 크기는 선언하지 않는다 (크롤러가 직접 측정)
       images: [
         {
           url: data.thumbnail,
-          width: 1200,
-          height: 630,
           alt: data.title,
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title,
+      description: data.excerpt,
+      images: [data.thumbnail],
     },
   };
 }
@@ -61,7 +69,11 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
             '@type': 'BlogPosting',
             headline: data.title,
             description: data.excerpt,
-            image: data.thumbnail,
+            image: `${SITE_URL}${data.thumbnail}`,
+            datePublished: data.date,
+            dateModified: data.date,
+            inLanguage: locale,
+            url: `${SITE_URL}/${locale}/posts/${fileName}`,
             author: {
               '@type': 'Person',
               name: 'HelloWook',
@@ -72,7 +84,7 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
             },
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': `https://hellowook.is-a.dev/${locale}/posts/${fileName}`,
+              '@id': `${SITE_URL}/${locale}/posts/${fileName}`,
             },
           }),
         }}
