@@ -12,6 +12,8 @@ const customJestConfig = {
     '^@messages/(.*)$': '<rootDir>/messages/$1',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+  // 레포 안에 중첩된 git worktree(.cmux)는 같은 테스트의 사본이라 제외한다
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/.cmux/'],
 };
 
 const jestConfig = async () => {
