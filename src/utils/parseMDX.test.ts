@@ -1,10 +1,10 @@
 import parseMDX from './parseMDX';
-import { buildPath } from './file';
+import { buildPath } from '@/utils/file';
 import fs from 'fs';
 import matter from 'gray-matter';
 
 // Mock dependencies
-jest.mock('./file');
+jest.mock('@/utils/file');
 jest.mock('fs');
 jest.mock('gray-matter');
 
