@@ -1,5 +1,6 @@
 import { getAllPostFileNames } from '@/utils/file';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import parseMdx from '@/utils/parseMDX';
 import PostDetail from '@/components/Post/PostDetail/PostDetail';
 import TOC from '@/components/TOC/TOC';
@@ -17,8 +18,15 @@ export async function generateStaticParams() {
   return routing.locales.flatMap((locale) => fileNames.map((fileName) => ({ locale, fileName })));
 }
 
+// 없는 글 주소가 500(MDX 파일 없음 에러)으로 터지지 않고 404가 되도록 먼저 거른다
+const assertPostExists = (fileName: string) => {
+  if (!getAllPostFileNames().includes(fileName)) notFound();
+};
+
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
   const { fileName, locale } = await params;
+  assertPostExists(fileName);
+
   const { data } = parseMdx(fileName, locale);
 
   return {
@@ -97,6 +105,7 @@ async function CachedPostContent({ fileName, locale }: { fileName: string; local
 
 export default async function PostDetailPage({ params }: PostDetailPageProps) {
   const { fileName, locale } = await params;
+  assertPostExists(fileName);
 
   return <CachedPostContent fileName={fileName} locale={locale} />;
 }
