@@ -4,7 +4,9 @@ import '@/styles/global.css';
 import Header from '@/components/Header/Header';
 import Drawer from '@/components/Drawer/Drawer';
 import { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
+import { notFound } from 'next/navigation';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { routing } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
 import { SITE_URL, OG_LOCALE, OG_IMAGE, buildAlternates } from '@/utils/seo';
 import { Suspense } from 'react';
@@ -18,6 +20,8 @@ interface LocaleLayoutProps {
 
 export async function generateMetadata({ params }: Pick<LocaleLayoutProps, 'params'>): Promise<Metadata> {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+
   const t = await getTranslations({ locale, namespace: 'Meta' });
 
   const siteName = t('siteName');
@@ -87,6 +91,8 @@ export async function generateMetadata({ params }: Pick<LocaleLayoutProps, 'para
 
 export default async function RootLayouta({ children, params }: Readonly<LocaleLayoutProps>) {
   const { locale } = await params;
+  // 없는 경로(`/foo`)가 [locale]로 들어와 200 빈 페이지가 되지 않도록 404로 막는다
+  if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
     <html lang={locale} className={suite.className} suppressHydrationWarning>
